@@ -340,9 +340,9 @@
             <script>
               function payWithPaystack() {
                 let handler = PaystackPop.setup({
-                  key: 'https://paystack.shop/pay/nm7wpn4ri-',
+                  key: 'pk_live_2936dc167ad577c516073c1376b737a5c63eccad',
                   email: 'sakyiebenezer316@email.com',
-                  amount: 50000, // 10 GHS = 1000 pesewas
+                  amount: 10, // 10 GHS = 1000 pesewas
                   currency: 'GHS',
 
                   callback: function (response) {
@@ -354,7 +354,7 @@
                     const paymentRef = doc(db, 'payments', response.reference);
                     setDoc(paymentRef, {
                       email: 'sakyiebenezer316@email.com',
-                      amount: 50000,
+                      amount: 10,
                       currency: 'GHS',
                       status: 'success',
                       timestamp: new Date(),
