@@ -116,6 +116,154 @@
         max-width: 600px;
         margin: auto;
       }
+      /* ================================
+   LARGE SCREENS (Desktops >1400px)
+================================ */
+@media (min-width: 1400px) {
+
+  .container{
+    max-width:1300px;
+  }
+
+  .dashboard{
+    grid-template-columns: 350px 1fr;
+  }
+
+  .content{
+    padding:60px;
+  }
+
+}
+
+
+/* ================================
+   LAPTOPS / SMALL DESKTOPS
+================================ */
+@media (max-width: 1200px){
+
+  .container{
+    max-width:95%;
+  }
+
+}
+
+
+/* ================================
+   TABLETS (iPad, etc.)
+================================ */
+@media (max-width: 992px){
+
+  .dashboard{
+    grid-template-columns: 1fr;
+  }
+
+  .profile{
+    margin-bottom:20px;
+  }
+
+  .content{
+    padding:25px;
+  }
+
+}
+
+
+/* ================================
+   LARGE PHONES
+================================ */
+@media (max-width: 768px){
+
+  body{
+    padding:10px;
+  }
+
+  .header{
+    padding:20px;
+  }
+
+  .header h1{
+    font-size:1.6rem;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  .selection{
+    flex-direction:column;
+  }
+
+}
+
+
+/* ================================
+   SMALL PHONES
+   (iPhone SE 2, iPhone 8, etc.)
+================================ */
+@media (max-width: 480px){
+
+  .content{
+    padding:15px;
+  }
+
+  input, select{
+    font-size:16px; /* prevents zoom on iPhone */
+  }
+
+  .avatar{
+    width:70px;
+    height:70px;
+    font-size:1.5rem;
+  }
+
+  .question{
+    padding:15px;
+  }
+
+}
+
+
+/* ================================
+   EXTRA SMALL PHONES
+   ✅ iPhone SE (1st Gen - 320px)
+================================ */
+@media (max-width: 360px){
+
+  .header h1{
+    font-size:1.3rem;
+  }
+
+  .container{
+    border-radius:14px;
+  }
+
+  .btn{
+    padding:12px;
+    font-size:14px;
+  }
+
+  .timer{
+    font-size:1rem;
+  }
+
+}
+
+
+/* ================================
+   ULTRA SMALL DEVICES (320px)
+================================ */
+@media (max-width: 320px){
+
+  .header h1{
+    font-size:1.1rem;
+  }
+
+  .content{
+    padding:10px;
+  }
+
+}
+
     </style>
   </head>
 
