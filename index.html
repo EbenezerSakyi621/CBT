@@ -1,8 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#1a73e8" />
 
     <title>SAKYI'S ELITE CBT</title>
 
@@ -39,7 +41,7 @@
         padding: 40px;
       }
 
-      .btn {
+      .pay-btn {
         padding: 14px 28px;
         border: none;
         border-radius: 12px;
@@ -119,151 +121,191 @@
       /* ================================
    LARGE SCREENS (Desktops >1400px)
 ================================ */
-@media (min-width: 1400px) {
+      @media (min-width: 1400px) {
+        .container {
+          max-width: 1300px;
+        }
 
-  .container{
-    max-width:1300px;
-  }
+        .dashboard {
+          grid-template-columns: 350px 1fr;
+        }
 
-  .dashboard{
-    grid-template-columns: 350px 1fr;
-  }
+        .content {
+          padding: 60px;
+        }
+      }
 
-  .content{
-    padding:60px;
-  }
-
-}
-
-
-/* ================================
+      /* ================================
    LAPTOPS / SMALL DESKTOPS
 ================================ */
-@media (max-width: 1200px){
+      @media (max-width: 1200px) {
+        .container {
+          max-width: 95%;
+        }
+      }
 
-  .container{
-    max-width:95%;
-  }
-
-}
-
-
-/* ================================
+      /* ================================
    TABLETS (iPad, etc.)
 ================================ */
-@media (max-width: 992px){
+      @media (max-width: 992px) {
+        .dashboard {
+          grid-template-columns: 1fr;
+        }
 
-  .dashboard{
-    grid-template-columns: 1fr;
-  }
+        .profile {
+          margin-bottom: 20px;
+        }
 
-  .profile{
-    margin-bottom:20px;
-  }
+        .content {
+          padding: 25px;
+        }
+      }
 
-  .content{
-    padding:25px;
-  }
-
-}
-
-
-/* ================================
+      /* ================================
    LARGE PHONES
 ================================ */
-@media (max-width: 768px){
+      @media (max-width: 768px) {
+        body {
+          padding: 10px;
+        }
 
-  body{
-    padding:10px;
-  }
+        .header {
+          padding: 20px;
+        }
 
-  .header{
-    padding:20px;
-  }
+        .header h1 {
+          font-size: 1.6rem;
+        }
 
-  .header h1{
-    font-size:1.6rem;
-  }
+        .pay-btn {
+          width: 100%;
+        }
 
-  .btn{
-    width:100%;
-  }
+        .selection {
+          flex-direction: column;
+        }
+      }
 
-  .selection{
-    flex-direction:column;
-  }
-
-}
-
-
-/* ================================
+      /* ================================
    SMALL PHONES
    (iPhone SE 2, iPhone 8, etc.)
 ================================ */
-@media (max-width: 480px){
+      @media (max-width: 480px) {
+        .content {
+          padding: 15px;
+        }
 
-  .content{
-    padding:15px;
-  }
+        input,
+        select {
+          font-size: 16px; /* prevents zoom on iPhone */
+        }
 
-  input, select{
-    font-size:16px; /* prevents zoom on iPhone */
-  }
+        .avatar {
+          width: 70px;
+          height: 70px;
+          font-size: 1.5rem;
+        }
 
-  .avatar{
-    width:70px;
-    height:70px;
-    font-size:1.5rem;
-  }
+        .question {
+          padding: 15px;
+        }
+      }
 
-  .question{
-    padding:15px;
-  }
-
-}
-
-
-/* ================================
+      /* ================================
    EXTRA SMALL PHONES
    ✅ iPhone SE (1st Gen - 320px)
 ================================ */
-@media (max-width: 360px){
+      @media (max-width: 360px) {
+        .header h1 {
+          font-size: 1.3rem;
+        }
 
-  .header h1{
-    font-size:1.3rem;
-  }
+        .container {
+          border-radius: 14px;
+        }
 
-  .container{
-    border-radius:14px;
-  }
+        .pay-btn {
+          padding: 12px;
+          font-size: 14px;
+        }
 
-  .btn{
-    padding:12px;
-    font-size:14px;
-  }
+        .timer {
+          font-size: 1rem;
+        }
+      }
 
-  .timer{
-    font-size:1rem;
-  }
-
-}
-
-
-/* ================================
+      /* ================================
    ULTRA SMALL DEVICES (320px)
 ================================ */
-@media (max-width: 320px){
+      @media (max-width: 320px) {
+        .header h1 {
+          font-size: 1.1rem;
+        }
 
-  .header h1{
-    font-size:1.1rem;
-  }
+        .content {
+          padding: 10px;
+        }
+      }
+    </style>
+    <style>
+      /* Center the button (optional) */
+      .button-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: #f5f7fb;
+      }
 
-  .content{
-    padding:10px;
-  }
+      /* Premium Button */
+      .pay-pay-btn {
+        padding: 16px 38px;
+        font-size: 18px;
+        font-weight: 600;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
 
-}
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
 
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+
+        transition: all 0.3s ease;
+      }
+
+      /* Hover Effect */
+      .pay-pay-btn:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+      }
+
+      /* Click Effect */
+      .pay-pay-btn:active {
+        transform: scale(0.96);
+      }
+
+      /* Shine Animation */
+      .pay-pay-btn::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -75%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(
+          120deg,
+          rgba(255, 255, 255, 0.2),
+          rgba(255, 255, 255, 0.6),
+          rgba(255, 255, 255, 0.2)
+        );
+        transform: skewX(-20deg);
+        transition: 0.5s;
+      }
+
+      .pay-pay-btn:hover::after {
+        left: 130%;
+      }
     </style>
   </head>
 
@@ -280,14 +322,60 @@
           <h2 style="text-align: center">Student Access</h2>
           <input id="studentId" placeholder="Enter Student ID" />
           <div class="selection">
-            <button class="btn" onclick="verifyStudent()">Enter Exam</button>
+            <button class="pay-pay-btn" onclick="verifyStudent()">
+              Enter Exam
+            </button>
           </div>
 
           <hr style="margin: 40px 0" />
 
           <h2 style="text-align: center">Administrator</h2>
           <div class="selection">
-            <button class="btn" onclick="openAdmin()">Admin Portal</button>
+            <button class="pay-pay-btn" onclick="payWithPaystack()">
+              Register As Admin
+            </button>
+
+            <script src="https://js.paystack.co/v1/inline.js"></script>
+
+            <script>
+              function payWithPaystack() {
+                let handler = PaystackPop.setup({
+                  key: 'pk_live_2936dc167ad577c516073c1376b737a5c63eccad',
+                  email: 'user@email.com',
+                  amount: 10, // 10 GHS = 1000 pesewas
+                  currency: 'GHS',
+
+                  callback: function (response) {
+                    alert(
+                      'Payment successful! Reference: ' + response.reference,
+                    );
+
+                    // Send reference to Firebase here
+                    const paymentRef = doc(db, 'payments', response.reference);
+                    setDoc(paymentRef, {
+                      email: 'sakyiebenezer316@email.com',
+                      amount: 50000,
+                      currency: 'GHS',
+                      status: 'success',
+                      timestamp: new Date(),
+                    });
+
+                    // Unlock admin panel
+                    openAdmin();
+                  },
+
+                  onClose: function () {
+                    alert('Transaction cancelled');
+                  },
+                });
+
+                handler.openIframe();
+              }
+            </script>
+
+            <button class="pay-pay-btn" onclick="openAdmin()">
+              Admin Portal
+            </button>
           </div>
         </div>
 
@@ -298,20 +386,20 @@
           <input id="adminPass" type="password" placeholder="Password" />
 
           <div class="selection">
-            <button class="btn" onclick="loginAdmin()">Login</button>
-            <button class="btn" onclick="goHome()">Cancel</button>
+            <button class="pay-btn" onclick="loginAdmin()">Login</button>
+            <button class="pay-btn" onclick="goHome()">Cancel</button>
           </div>
         </div>
 
         <!-- ADMIN PANEL -->
         <div id="adminPanel" class="hidden adminBox">
           <h2>Admin Panel</h2>
-          <button class="btn" onclick="logoutAdmin()">Logout</button>
+          <button class="pay-btn" onclick="logoutAdmin()">Logout</button>
 
           <h3 style="margin-top: 20px">Add Student</h3>
           <input id="newStudentId" />
           <input id="newStudentName" />
-          <button class="btn" onclick="addStudent()">Save Student</button>
+          <button class="pay-btn" onclick="addStudent()">Save Student</button>
 
           <h3 style="margin-top: 20px">Upload Question</h3>
 
@@ -323,13 +411,13 @@
 
           <input
             id="adminSubject"
-            placeholder="Subject (english, math, science)"
+            placeholder="Subject (ENGLISH, MATHEMATICS, SCIENCE)"
           />
           <input id="adminQuestion" placeholder="Question" />
           <input id="adminOptions" placeholder="Options comma separated" />
           <input id="adminAnswer" placeholder="Correct Answer" />
 
-          <button class="btn" onclick="addQuestion()">Upload</button>
+          <button class="pay-btn" onclick="addQuestion()">Upload</button>
 
           <h3 style="margin-top: 25px">Manage Questions</h3>
           <div id="questionList"></div>
@@ -341,16 +429,22 @@
             <div class="profile">
               <div class="avatar" id="avatar"></div>
               <h3 id="welcome"></h3>
-              <button class="btn" onclick="goHome()">Logout</button>
+              <button class="pay-btn" onclick="goHome()">Logout</button>
             </div>
 
             <div>
               <h2>Select Class</h2>
 
               <div class="selection">
-                <button class="btn" onclick="selectClass('jhs1')">JHS 1</button>
-                <button class="btn" onclick="selectClass('jhs2')">JHS 2</button>
-                <button class="btn" onclick="selectClass('jhs3')">JHS 3</button>
+                <button class="pay-btn" onclick="selectClass('jhs1')">
+                  JHS 1
+                </button>
+                <button class="pay-btn" onclick="selectClass('jhs2')">
+                  JHS 2
+                </button>
+                <button class="pay-btn" onclick="selectClass('jhs3')">
+                  JHS 3
+                </button>
               </div>
 
               <div id="subjects" class="selection" style="margin-top: 30px">
@@ -367,7 +461,7 @@
           <form id="quizForm"></form>
 
           <div class="selection">
-            <button class="btn" type="button" onclick="gradeTest()">
+            <button class="pay-btn" type="button" onclick="gradeTest()">
               Submit
             </button>
           </div>
@@ -376,11 +470,13 @@
           <div id="resultSlip" class="hidden"></div>
 
           <div class="selection hidden" id="printBox">
-            <button class="btn" onclick="printSlip()">🖨 Print Result</button>
+            <button class="pay-btn" onclick="printSlip()">
+              🖨 Print Result
+            </button>
           </div>
 
           <div class="selection hidden" id="goBackBox">
-            <button class="btn" onclick="goHome()">Go Back Home</button>
+            <button class="pay-btn" onclick="goHome()">Go Back Home</button>
           </div>
         </div>
       </div>
@@ -472,9 +568,10 @@
 
         let seconds = 60;
 
-        if (subject === 'english') seconds = 45;
-        if (subject === 'math' || subject === 'mathematics') seconds = 60;
-        if (subject === 'science') seconds = 60;
+        if (subject === 'ENGLISH') seconds = 45;
+        if (subject === 'MATHEMATICS' || subject === 'MATHEMATICS')
+          seconds = 60;
+        if (subject === 'SCIENCE') seconds = 60;
 
         return seconds * count;
       }
@@ -544,7 +641,7 @@
 <div style="border:1px solid #ddd;padding:10px;margin:10px;border-radius:10px">
 <b>${q.q}</b>
 <br><br>
-<button onclick="deleteQuestion('${docSnap.id}')" class="btn">Delete</button>
+<button onclick="deleteQuestion('${docSnap.id}')" class="pay-btn">Delete</button>
 </div>`;
         });
       }
@@ -591,7 +688,7 @@
         }
 
         subs.forEach((sub) => {
-          subjectsDiv.innerHTML += `<button class="btn" onclick="startExam('${level}','${sub}')">${sub}</button>`;
+          subjectsDiv.innerHTML += `<button class="pay-btn" onclick="startExam('${level}','${sub}')">${sub}</button>`;
         });
       }
 
@@ -756,6 +853,9 @@ ${percent >= 50 ? 'PASS' : 'FAIL'}
         w.document.write(resultSlip.innerHTML);
         w.print();
       };
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js');
+      }
     </script>
   </body>
 </html>
