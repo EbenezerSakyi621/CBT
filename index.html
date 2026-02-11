@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>SAKYI'S ELITE CBT</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #c7f9cc, #bde0fe);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: auto;
+        background: rgba(255, 255, 255, 0.65);
+        backdrop-filter: blur(18px);
+        border-radius: 24px;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+      }
+
+      .header {
+        background: linear-gradient(135deg, #80ed99, #a0c4ff);
+        padding: 30px;
+        text-align: center;
+      }
+
+      .content {
+        padding: 40px;
+      }
+
+      .btn {
+        padding: 14px 28px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 600;
+        background: linear-gradient(135deg, #52b788, #74c0fc);
+        color: white;
+      }
+
+      .selection {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 25px;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        margin-top: 10px;
+      }
+
+      .dashboard {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 25px;
+      }
+
+      .profile {
+        background: rgba(255, 255, 255, 0.75);
+        padding: 25px;
+        border-radius: 18px;
+        text-align: center;
+      }
+
+      .avatar {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #74c0fc, #80ed99);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: white;
+        margin: auto;
+      }
+
+      .question {
+        background: rgba(255, 255, 255, 0.85);
+        padding: 20px;
+        margin: 18px 0;
+        border-radius: 14px;
+      }
+
+      .timer {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #d90429;
+      }
+
+      .adminBox {
+        background: white;
+        padding: 25px;
+        border-radius: 16px;
+        max-width: 600px;
+        margin: auto;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🎓 SAKYI'S ELITE CBT</h1>
+        <p>Professional School Testing Platform</p>
+      </div>
+
+      <div class="content">
+        <!-- HOME -->
+        <div id="homeScreen">
+          <h2 style="text-align: center">Student Access</h2>
+          <input id="studentId" placeholder="Enter Student ID" />
+          <div class="selection">
+            <button class="btn" onclick="verifyStudent()">Enter Exam</button>
+          </div>
+
+          <hr style="margin: 40px 0" />
+
+          <h2 style="text-align: center">Administrator</h2>
+          <div class="selection">
+            <button class="btn" onclick="openAdmin()">Admin Portal</button>
+          </div>
+        </div>
+
+        <!-- ADMIN LOGIN -->
+        <div id="adminLogin" class="hidden adminBox">
+          <h2>Admin Login</h2>
+          <input id="adminEmail" placeholder="Email" />
+          <input id="adminPass" type="password" placeholder="Password" />
+
+          <div class="selection">
+            <button class="btn" onclick="loginAdmin()">Login</button>
+            <button class="btn" onclick="goHome()">Cancel</button>
+          </div>
+        </div>
+
+        <!-- ADMIN PANEL -->
+        <div id="adminPanel" class="hidden adminBox">
+          <h2>Admin Panel</h2>
+          <button class="btn" onclick="logoutAdmin()">Logout</button>
+
+          <h3 style="margin-top: 20px">Add Student</h3>
+          <input id="newStudentId" />
+          <input id="newStudentName" />
+          <button class="btn" onclick="addStudent()">Save Student</button>
+
+          <h3 style="margin-top: 20px">Upload Question</h3>
+
+          <select id="adminClass">
+            <option value="jhs1">JHS1</option>
+            <option value="jhs2">JHS2</option>
+            <option value="jhs3">JHS3</option>
+          </select>
+
+          <input
+            id="adminSubject"
+            placeholder="Subject (english, math, science)"
+          />
+          <input id="adminQuestion" placeholder="Question" />
+          <input id="adminOptions" placeholder="Options comma separated" />
+          <input id="adminAnswer" placeholder="Correct Answer" />
+
+          <button class="btn" onclick="addQuestion()">Upload</button>
+
+          <h3 style="margin-top: 25px">Manage Questions</h3>
+          <div id="questionList"></div>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="hidden">
+          <div class="dashboard">
+            <div class="profile">
+              <div class="avatar" id="avatar"></div>
+              <h3 id="welcome"></h3>
+              <button class="btn" onclick="goHome()">Logout</button>
+            </div>
+
+            <div>
+              <h2>Select Class</h2>
+
+              <div class="selection">
+                <button class="btn" onclick="selectClass('jhs1')">JHS 1</button>
+                <button class="btn" onclick="selectClass('jhs2')">JHS 2</button>
+                <button class="btn" onclick="selectClass('jhs3')">JHS 3</button>
+              </div>
+
+              <div id="subjects" class="selection" style="margin-top: 30px">
+                Preparing your exam...
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUIZ -->
+        <div id="quizScreen" class="hidden">
+          <div class="timer" id="timer"></div>
+
+          <form id="quizForm"></form>
+
+          <div class="selection">
+            <button class="btn" type="button" onclick="gradeTest()">
+              Submit
+            </button>
+          </div>
+
+          <h2 id="result" class="hidden"></h2>
+          <div id="resultSlip" class="hidden"></div>
+
+          <div class="selection hidden" id="printBox">
+            <button class="btn" onclick="printSlip()">🖨 Print Result</button>
+          </div>
+
+          <div class="selection hidden" id="goBackBox">
+            <button class="btn" onclick="goHome()">Go Back Home</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js';
+
+      import {
+        getFirestore,
+        collection,
+        getDocs,
+        doc,
+        getDoc,
+        setDoc,
+        addDoc,
+        deleteDoc,
+      } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js';
+
+      import {
+        getAuth,
+        signInWithEmailAndPassword,
+        signOut,
+        setPersistence,
+        browserSessionPersistence,
+      } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js';
+
+      const firebaseConfig = {
+        apiKey: 'AIzaSyAZ7SvvAECv7I1JNy0u1nUsC6q-8-5BUiY',
+        authDomain: 'elite-cbt-system-97ffa.firebaseapp.com',
+        projectId: 'elite-cbt-system-97ffa',
+        storageBucket: 'elite-cbt-system-97ffa.firebasestorage.app',
+        messagingSenderId: '978602825271',
+        appId: '1:978602825271:web:a2c26f3853ff155a4991b2',
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth(app);
+
+      setPersistence(auth, browserSessionPersistence);
+
+      // STATE
+      let questionBank = { jhs1: {}, jhs2: {}, jhs3: {} };
+      let questionsLoaded = false;
+      let currentStudent = null;
+      let currentQuestions = [];
+      let timerInterval;
+
+      // UI helpers
+      function hideAll() {
+        document
+          .querySelectorAll(
+            '#homeScreen,#dashboard,#quizScreen,#adminLogin,#adminPanel',
+          )
+          .forEach((el) => el.classList.add('hidden'));
+      }
+
+      function goHome() {
+        hideAll();
+        homeScreen.classList.remove('hidden');
+      }
+
+      goHome();
+
+      // LOAD QUESTIONS (FIXED)
+      async function loadQuestions() {
+        questionBank = { jhs1: {}, jhs2: {}, jhs3: {} };
+
+        const snap = await getDocs(collection(db, 'questions'));
+
+        snap.forEach((docSnap) => {
+          const d = docSnap.data();
+
+          if (!questionBank[d.level][d.subject])
+            questionBank[d.level][d.subject] = [];
+
+          questionBank[d.level][d.subject].push(d);
+        });
+
+        questionsLoaded = true;
+      }
+
+      loadQuestions();
+
+      // TIMER CALCULATOR
+      function calculateExamTime(subject, count) {
+        subject = subject.toLowerCase();
+
+        let seconds = 60;
+
+        if (subject === 'english') seconds = 45;
+        if (subject === 'math' || subject === 'mathematics') seconds = 60;
+        if (subject === 'science') seconds = 60;
+
+        return seconds * count;
+      }
+
+      // ADMIN
+      function openAdmin() {
+        hideAll();
+        adminLogin.classList.remove('hidden');
+      }
+
+      async function loginAdmin() {
+        const email = adminEmail.value.trim();
+
+        // change this to YOUR admin email
+        if (email !== 's@gmail.com') {
+          alert('Unauthorized Admin');
+          return;
+        }
+
+        await signInWithEmailAndPassword(auth, email, adminPass.value);
+
+        hideAll();
+        adminPanel.classList.remove('hidden');
+
+        loadAdminQuestions();
+      }
+
+      function logoutAdmin() {
+        signOut(auth);
+        goHome();
+      }
+
+      async function addStudent() {
+        await setDoc(doc(db, 'students', newStudentId.value), {
+          name: newStudentName.value,
+        });
+        alert('Student added');
+      }
+
+      async function addQuestion() {
+        await addDoc(collection(db, 'questions'), {
+          level: adminClass.value,
+          subject: adminSubject.value.toLowerCase(),
+          q: adminQuestion.value,
+          options: adminOptions.value.split(',').map((o) => o.trim()),
+          answer: adminAnswer.value,
+        });
+
+        alert('Uploaded');
+
+        loadQuestions();
+        loadAdminQuestions();
+      }
+
+      async function loadAdminQuestions() {
+        const list = document.getElementById('questionList');
+        list.innerHTML = 'Loading...';
+
+        const snap = await getDocs(collection(db, 'questions'));
+
+        list.innerHTML = '';
+
+        snap.forEach((docSnap) => {
+          const q = docSnap.data();
+
+          list.innerHTML += `
+<div style="border:1px solid #ddd;padding:10px;margin:10px;border-radius:10px">
+<b>${q.q}</b>
+<br><br>
+<button onclick="deleteQuestion('${docSnap.id}')" class="btn">Delete</button>
+</div>`;
+        });
+      }
+
+      window.deleteQuestion = async (id) => {
+        await deleteDoc(doc(db, 'questions', id));
+        loadAdminQuestions();
+        loadQuestions();
+      };
+
+      // STUDENT
+      async function verifyStudent() {
+        const snap = await getDoc(doc(db, 'students', studentId.value.trim()));
+
+        if (!snap.exists()) {
+          alert('Student not found');
+          return;
+        }
+
+        currentStudent = snap.data();
+
+        hideAll();
+        dashboard.classList.remove('hidden');
+
+        welcome.innerText = `Welcome, ${currentStudent.name}`;
+        avatar.innerText = currentStudent.name.charAt(0).toUpperCase();
+      }
+
+      // FIXED SUBJECT LOADER
+      function selectClass(level) {
+        if (!questionsLoaded) {
+          subjects.innerHTML = 'Preparing your exam... Please wait.';
+          return;
+        }
+
+        const subjectsDiv = document.getElementById('subjects');
+        subjectsDiv.innerHTML = '';
+
+        const subs = Object.keys(questionBank[level]);
+
+        if (subs.length === 0) {
+          subjectsDiv.innerHTML = '<b>No subjects uploaded yet.</b>';
+          return;
+        }
+
+        subs.forEach((sub) => {
+          subjectsDiv.innerHTML += `<button class="btn" onclick="startExam('${level}','${sub}')">${sub}</button>`;
+        });
+      }
+
+      function startExam(level, subject) {
+        const questions = [...questionBank[level][subject]].sort(
+          () => Math.random() - 0.5,
+        );
+
+        currentQuestions = questions;
+
+        hideAll();
+        quizScreen.classList.remove('hidden');
+
+        quizForm.innerHTML = '';
+
+        questions.forEach((q, i) => {
+          const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+
+          quizForm.innerHTML += `
+<div class="question">
+<p>${q.q}</p>
+
+${shuffled
+  .map(
+    (o) =>
+      `<label>
+<input type="radio" name="q${i}" value="${o}"> ${o}
+</label><br>`,
+  )
+  .join('')}
+
+</div>`;
+        });
+
+        const seconds = calculateExamTime(subject, questions.length);
+
+        alert(`You have ${Math.ceil(seconds / 60)} minutes.`);
+
+        startTimer(seconds);
+      }
+
+      function startTimer(seconds) {
+        timerInterval = setInterval(() => {
+          const m = Math.floor(seconds / 60);
+          const s = seconds % 60;
+
+          timer.innerText = `⏳ Time Remaining: ${m}:${s < 10 ? '0' : ''}${s}`;
+
+          seconds--;
+
+          if (seconds < 0) {
+            clearInterval(timerInterval);
+            gradeTest();
+          }
+        }, 1000);
+      }
+
+      function gradeTest() {
+        clearInterval(timerInterval);
+
+        let score = 0;
+
+        currentQuestions.forEach((q, i) => {
+          const picked = document.querySelector(`input[name="q${i}"]:checked`);
+          const questionBox = document.querySelectorAll('.question')[i];
+
+          // disable all radios
+          document
+            .querySelectorAll(`input[name="q${i}"]`)
+            .forEach((r) => (r.disabled = true));
+
+          if (picked && picked.value === q.answer) {
+            score++;
+
+            questionBox.style.border = '3px solid #38b000'; // green
+            questionBox.style.background = '#e9fbe5';
+
+            questionBox.innerHTML += `<p style="color:#2b9348;font-weight:bold;">
+      ✅ Correct
+      </p>`;
+          } else {
+            questionBox.style.border = '3px solid #d90429'; // red
+            questionBox.style.background = '#ffe5e5';
+
+            questionBox.innerHTML += `
+      <p style="color:#d90429;font-weight:bold;">
+      ❌ Wrong
+      </p>
+
+      <p style="color:#2b9348;font-weight:bold;">
+      Correct Answer: ${q.answer}
+      </p>`;
+          }
+        });
+
+        result.classList.remove('hidden');
+
+        result.innerText = `${currentStudent.name}, you scored ${Math.round(
+          (score / currentQuestions.length) * 100,
+        )}%`;
+        generateSlip(score);
+
+        goBackBox.classList.remove('hidden');
+      }
+      document.addEventListener('visibilitychange', () => {
+        if (
+          document.hidden &&
+          quizScreen.classList.contains('hidden') === false
+        ) {
+          alert('Tab switch detected!');
+          gradeTest();
+        }
+      });
+      // ADD THIS LINE: saves the subject for the result slip
+
+      // expose
+      window.verifyStudent = verifyStudent;
+      window.openAdmin = openAdmin;
+      window.loginAdmin = loginAdmin;
+      window.logoutAdmin = logoutAdmin;
+      window.addStudent = addStudent;
+      window.addQuestion = addQuestion;
+      window.selectClass = selectClass;
+      window.startExam = startExam;
+      window.gradeTest = gradeTest;
+      window.goHome = goHome;
+      function generateSlip(score) {
+        const percent = Math.round((score / currentQuestions.length) * 100);
+
+        const slip = `
+<div style="
+background:white;
+padding:30px;
+border-radius:16px;
+max-width:500px;
+margin:30px auto;
+text-align:center;
+box-shadow:0 10px 40px rgba(0,0,0,0.2);
+">
+
+<h2>🎓 SAKYI'S ELITE CBT</h2>
+<hr><br>
+
+<p><b>Student:</b> ${currentStudent.name}</p>
+<p><b>Score:</b> ${percent}%</p>
+<p><b>Total Questions:</b> ${currentQuestions.length}</p>
+<p><b>Date:</b> ${new Date().toLocaleDateString()}</p>
+
+<h1 style="color:${percent >= 50 ? '#38b000' : '#d90429'}">
+${percent >= 50 ? 'PASS' : 'FAIL'}
+</h1>
+
+</div>
+`;
+
+        resultSlip.innerHTML = slip;
+        resultSlip.classList.remove('hidden');
+        printBox.classList.remove('hidden');
+      }
+      window.printSlip = () => {
+        const w = window.open('');
+        w.document.write(resultSlip.innerHTML);
+        w.print();
+      };
+    </script>
+  </body>
+</html>
