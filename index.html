@@ -9,6 +9,7 @@
 <meta name="theme-color" content="#1a73e8">
 
     <title>SAKYI'S ELITE CBT</title>
+<script src="https://js.paystack.co/v1/inline.js"></script>
 
     <style>
       * {
@@ -334,8 +335,9 @@
           <h2 style="text-align: center">Administrator</h2>
           <div class="selection">
             <button class="pay-pay-btn" onclick="payWithPaystack()">
-              Register As Admin
-            </button>
+  Register As Admin
+</button>
+
 
             <script src="https://js.paystack.co/v1/inline.js"></script>
 
@@ -862,6 +864,34 @@ ${percent >= 50 ? 'PASS' : 'FAIL'}
   navigator.serviceWorker.register("/service-worker.js");
 }
 
+function payWithPaystack() {
+  let handler = PaystackPop.setup({
+    key: 'pk_live_2936dc167ad577c516073c1376b737a5c63eccad', // 🔴 Paystack PUBLIC key
+    email: 'sakyiebenezer316@gmail.com@example.com', // you can replace with real email
+    amount: 5000 * 100, // amount in pesewas (₵50 = 5000)
+    currency: 'GHS',
+
+    callback: function (response) {
+      // ✅ PAYMENT SUCCESS
+      document.getElementById('paymentSuccess').classList.remove('hidden');
+
+      document.getElementById('payRef').innerText = response.reference;
+      document.getElementById('payAmount').innerText = '50.00';
+      document.getElementById('payDate').innerText =
+        new Date().toLocaleString();
+
+      alert('Payment successful! Please take a screenshot.');
+    },
+
+    onClose: function () {
+      alert('Payment cancelled');
+    }
+  });
+
+  handler.openIframe();
+}
+
+      
     </script>
   </body>
 </html>
