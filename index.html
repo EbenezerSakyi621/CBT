@@ -333,46 +333,49 @@
 
           <h2 style="text-align: center">Administrator</h2>
           <div class="selection">
-            <button class="pay-pay-btn" onclick="payWithPaystack()">
-              Register As Admin
-            </button>
+            <button onclick="payWithPaystack()" class="pay-pay-btn">
+Pay Now
+</button>
 
             <script src="https://js.paystack.co/v1/inline.js"></script>
 
-            <script>
-              function payWithPaystack() {
-                let handler = PaystackPop.setup({
-                  key: 'pk_live_2936dc167ad577c516073c1376b737a5c63eccad',
-                  email: 'sakyiebenezer316@email.com',
-                  amount: 10, // 10 GHS = 1000 pesewas
-                  currency: 'GHS',
+            <script>function payWithPaystack() {
 
-                  callback: function (response) {
-                    alert(
-                      'Payment successful! Reference: ' + response.reference,
-                    );
+  let handler = PaystackPop.setup({
+    key: 'YOUR_PUBLIC_KEY', // 🔥 replace this
+    email: 'student@email.com', // optional
+    amount: 5000 * 100, // ₵50 example
+    currency: 'GHS',
 
-                    // Send reference to Firebase here
-                    const paymentRef = doc(db, 'payments', response.reference);
-                    setDoc(paymentRef, {
-                      email: 'sakyiebenezer316@email.com',
-                      amount: 10,
-                      currency: 'GHS',
-                      status: 'success',
-                      timestamp: new Date(),
-                    });
+    // ✅ THIS IS YOUR CALLBACK FUNCTION
+    callback: function(response) {
 
-                    // Unlock admin panel
-                    openAdmin();
-                  },
+      // Show permanent overlay
+      document.getElementById('paymentOverlay').style.display = 'flex';
 
-                  onClose: function () {
-                    alert('Transaction cancelled');
-                  },
-                });
+      document.getElementById('overlayRef').innerText =
+        response.reference;
 
-                handler.openIframe();
-              }
+      document.getElementById('overlayAmount').innerText = "50.00";
+
+      document.getElementById('overlayDate').innerText =
+        new Date().toLocaleString();
+    },
+
+    onClose: function() {
+      alert('Transaction was not completed.');
+    }
+  });
+
+  handler.openIframe();
+}
+
+
+// CLOSE BUTTON
+function closePaymentOverlay(){
+  document.getElementById('paymentOverlay').style.display = 'none';
+}
+
             </script>
 
             <button class="pay-pay-btn" onclick="openAdmin()">
@@ -863,5 +866,63 @@ ${percent >= 50 ? 'PASS' : 'FAIL'}
 }
 
     </script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+<!-- PAYMENT SUCCESS OVERLAY -->
+<div id="paymentOverlay" style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.9);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:9999;
+">
+
+<div style="
+background:white;
+padding:40px;
+border-radius:20px;
+text-align:center;
+max-width:500px;
+width:90%;
+box-shadow:0 20px 60px rgba(0,0,0,0.3);
+">
+
+<h1 style="color:#38b000;">✅ PAYMENT SUCCESSFUL</h1>
+
+<p style="margin-top:20px;">
+<b>Reference:</b> <span id="overlayRef"></span>
+</p>
+
+<p>
+<b>Amount:</b> ₵<span id="overlayAmount"></span>
+</p>
+
+<p>
+<b>Date:</b> <span id="overlayDate"></span>
+</p>
+
+<p style="margin:20px 0;font-weight:bold;">
+📸 Please screenshot this page and send it to the admin.
+</p>
+
+<button onclick="closePaymentOverlay()" style="
+padding:14px 30px;
+border:none;
+border-radius:10px;
+background:#d90429;
+color:white;
+font-size:16px;
+cursor:pointer;
+">
+Close
+</button>
+
+</div>
+</div>
+
   </body>
 </html>
