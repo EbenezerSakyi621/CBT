@@ -17,6 +17,19 @@
         height: 100vh;
         background: #eef2ff;
       }
+.container{
+position:relative;
+}
+
+.container::before{
+content:"";
+position:absolute;
+inset:0;
+
+background:url("watermack.png") center / 300px no-repeat;
+opacity:0.05;
+pointer-events:none;
+}
 
       /* PAY BUTTON */
       .pay-btn {
