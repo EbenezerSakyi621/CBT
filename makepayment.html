@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Paystack Persistent Popup</title>
+
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+
+    <style>
+      body {
+        font-family: Segoe UI;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: #eef2ff;
+      }
+
+      /* PAY BUTTON */
+      .pay-btn {
+        padding: 18px 40px;
+        font-size: 18px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        color: white;
+        cursor: pointer;
+      }
+
+      .container {
+        width: min(95%, 1200px);
+        background: rgba(255, 255, 255, 0.15);
+
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+
+        border-radius: 28px;
+        box-shadow: 0 40px 120px rgba(0, 0, 0, 0.25);
+
+        padding: 40px;
+        color: white;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .header h1 {
+        font-size: 2.4rem;
+        letter-spacing: 1px;
+      }
+
+      .header p {
+        opacity: 0.85;
+      }
+
+      /* MODAL */
+      #paymentModal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        z-index: 99999;
+
+        /* THIS keeps it centered permanently */
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* BOX */
+      .modal-box {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        width: 90%;
+        max-width: 450px;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+      }
+
+      .close-btn {
+        margin-top: 25px;
+        padding: 14px 28px;
+        border: none;
+        border-radius: 10px;
+        background: #d90429;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      body {
+        font-family: 'Segoe UI', sans-serif;
+        min-height: 100vh;
+        margin: 0;
+
+        /* Modern gradient */
+        background: linear-gradient(135deg, #667eea, #764ba2);
+
+        /* keeps layout centered */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      button {
+        padding: 14px 28px;
+        border: none;
+        border-radius: 14px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 16px;
+
+        /* gradient */
+        background: linear-gradient(135deg, #00c6ff, #0072ff);
+        color: white;
+
+        transition: 0.35s;
+      }
+
+      /* hover */
+      button:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+      }
+
+      /* click */
+      button:active {
+        transform: scale(0.96);
+      }
+      .profile,
+      .question,
+      .adminBox {
+        background: rgba(255, 255, 255, 0.18);
+        border-radius: 20px;
+        padding: 25px;
+        backdrop-filter: blur(20px);
+      }
+      .avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 2.2rem;
+        font-weight: bold;
+
+        background: linear-gradient(135deg, #43e97b, #38f9d7);
+
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        margin: auto;
+      }
+      .container {
+        animation: fadeIn 0.8s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* =====================================
+   BASE (Mobile First) → 0px and up
+===================================== */
+
+      /* Write your normal CSS ABOVE.
+   These queries enhance it. */
+
+      /* ✅ Small Phones (iPhone SE, old Android) */
+      @media (min-width: 320px) {
+        .container {
+          padding: 15px;
+        }
+      }
+
+      /* ✅ Large Phones */
+      @media (min-width: 480px) {
+        .container {
+          padding: 20px;
+        }
+      }
+
+      /* ✅ Tablets */
+      @media (min-width: 768px) {
+        .dashboard {
+          grid-template-columns: 1fr;
+        }
+
+        .content {
+          padding: 30px;
+        }
+      }
+
+      /* ✅ Small Laptops */
+      @media (min-width: 1024px) {
+        .container {
+          max-width: 1000px;
+          margin: auto;
+        }
+
+        .dashboard {
+          grid-template-columns: 300px 1fr;
+        }
+      }
+
+      /* ✅ Desktops */
+      @media (min-width: 1280px) {
+        .container {
+          max-width: 1200px;
+        }
+      }
+
+      /* ✅ Large Screens / 2K */
+      @media (min-width: 1536px) {
+        .container {
+          max-width: 1400px;
+        }
+
+        body {
+          font-size: 18px;
+        }
+      }
+
+      /* ✅ 4K + Ultra Wide */
+      @media (min-width: 1920px) {
+        .container {
+          max-width: 1600px;
+        }
+
+        body {
+          font-size: 20px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <button class="pay-btn" onclick="payWithPaystack()">Make Payment</button>
+
+    <!-- ✅ PERMANENT MODAL -->
+    <div id="paymentModal">
+      <div class="modal-box">
+        <h1 style="color: #38b000">✅ Payment Successful</h1>
+
+        <p id="paymentRef" style="font-weight: bold"></p>
+
+        <p>
+          Please make a screenshot of this page or copy the reference code and
+          send it to
+          <a href="https://wa.me/233505807185" target="_blank">
+            this whatsapp number.
+          </a>
+          After confirming your payment, you will be registered as an admin and
+          can access the admin dashboard.
+        </p>
+        <p>
+          CLICK/TAP ON THE RED BUTTON BELOW IF YOU ARE DONE SENDING THE PAYMENT
+          CONFIRMATION ON WHATSAPP.
+        </p>
+        <a href="index.html" style="text-decoration: none" class="close-btn">
+          Return To Homepage</a
+        >
+      </div>
+    </div>
+
+    <script>
+      /* PAYSTACK */
+      function payWithPaystack() {
+        let handler = PaystackPop.setup({
+          key: 'pk_live_2936dc167ad577c516073c1376b737a5c63eccad', // replace
+          email: 'customer@email.com',
+
+          // IMPORTANT → Paystack uses pesewas
+          amount: 50, // 5 GHS
+
+          currency: 'GHS',
+
+          callback: function (response) {
+            /* SHOW MODAL */
+            showPaymentModal(response.reference);
+
+            /* STOP ANYTHING ELSE FROM RUNNING */
+            return false;
+          },
+
+          onClose: function () {
+            /* Optional */
+            console.log('Payment window closed');
+          },
+        });
+
+        handler.openIframe();
+      }
+
+      /* SHOW MODAL */
+      function showPaymentModal(reference) {
+        document.getElementById('paymentRef').innerText =
+          'Reference: ' + reference;
+
+        /* FLEX makes it stay centered */
+        document.getElementById('paymentModal').style.display = 'flex';
+
+        /* 🔥 THIS IS THE SECRET — prevents scrolling or page feel */
+        document.body.style.overflow = 'hidden';
+      }
+
+      /* CLOSE MODAL */
+      function closePaymentModal() {
+        document.getElementById('paymentModal').style.display = 'none';
+
+        /* restore scrolling */
+        document.body.style.overflow = 'auto';
+
+        /* 👉 NOW you can safely open admin page */
+        openAdmin();
+      }
+
+      /* Example admin function */
+      function openAdmin() {
+        alert('Admin can open now.');
+      }
+    </script>
+  </body>
+</html>
