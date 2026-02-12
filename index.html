@@ -335,7 +335,7 @@
           <h2 style="text-align: center">Administrator</h2>
           <div class="selection">
             <button class="pay-pay-btn" onclick="payWithPaystack()">
-  Register As 
+  Register As Admin
 </button>
 
 
@@ -350,9 +350,14 @@
                   currency: 'GHS',
 
                   callback: function (response) {
-                    alert(
-                      'Payment successful! Reference: ' + response.reference,
-                    );
+
+  document.getElementById('paymentOverlay').style.display = 'flex';
+
+  document.getElementById('overlayRef').innerText = response.reference;
+
+  document.getElementById('overlayDate').innerText =
+    new Date().toLocaleString();
+},
 
                     // Send reference to Firebase here
                     const paymentRef = doc(db, 'payments', response.reference);
@@ -891,7 +896,68 @@ function payWithPaystack() {
   handler.openIframe();
 }
 
+
+
+
+
+
+function closePaymentOverlay(){
+  document.getElementById('paymentOverlay').style.display = 'none';
+}
+
       
     </script>
+    <div id="paymentOverlay" style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.85);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:9999;
+">
+
+<div style="
+background:white;
+padding:40px;
+border-radius:20px;
+text-align:center;
+max-width:500px;
+width:90%;
+box-shadow:0 20px 60px rgba(0,0,0,0.3);
+">
+
+<h1 style="color:#38b000;">✅ PAYMENT SUCCESSFUL</h1>
+
+<p style="margin-top:15px;">
+<b>Reference:</b> <span id="overlayRef"></span>
+</p>
+
+<p>
+<b>Date:</b> <span id="overlayDate"></span>
+</p>
+
+<p style="margin:20px 0;font-weight:bold;">
+📸 Please screenshot this page and send it to the admin.
+</p>
+
+<button onclick="closePaymentOverlay()" style="
+padding:14px 30px;
+border:none;
+border-radius:10px;
+background:#d90429;
+color:white;
+font-size:16px;
+cursor:pointer;
+">
+Close
+</button>
+
+</div>
+</div>
+
   </body>
 </html>
