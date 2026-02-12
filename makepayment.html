@@ -134,7 +134,19 @@ pointer-events:none;
 
         transition: 0.35s;
       }
+.container{
+position:relative;
+}
 
+.container::before{
+content:"";
+position:absolute;
+inset:0;
+
+background:url("watermack.png") center / 300px no-repeat;
+opacity:0.05;
+pointer-events:none;
+}
       /* hover */
       button:hover {
         transform: translateY(-4px);
