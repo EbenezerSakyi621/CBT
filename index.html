@@ -9,7 +9,6 @@
 <meta name="theme-color" content="#1a73e8">
 
     <title>SAKYI'S ELITE CBT</title>
-<script src="https://js.paystack.co/v1/inline.js"></script>
 
     <style>
       * {
@@ -335,9 +334,8 @@
           <h2 style="text-align: center">Administrator</h2>
           <div class="selection">
             <button class="pay-pay-btn" onclick="payWithPaystack()">
-  Register As Admin
-</button>
-
+              Register As Admin
+            </button>
 
             <script src="https://js.paystack.co/v1/inline.js"></script>
 
@@ -350,14 +348,9 @@
                   currency: 'GHS',
 
                   callback: function (response) {
-
-  document.getElementById('paymentOverlay').style.display = 'flex';
-
-  document.getElementById('overlayRef').innerText = response.reference;
-
-  document.getElementById('overlayDate').innerText =
-    new Date().toLocaleString();
-},
+                    alert(
+                      'Payment successful! Reference: ' + response.reference,
+                    );
 
                     // Send reference to Firebase here
                     const paymentRef = doc(db, 'payments', response.reference);
@@ -869,95 +862,6 @@ ${percent >= 50 ? 'PASS' : 'FAIL'}
   navigator.serviceWorker.register("/service-worker.js");
 }
 
-function payWithPaystack() {
-  let handler = PaystackPop.setup({
-    key: 'pk_live_2936dc167ad577c516073c1376b737a5c63eccad', // 🔴 Paystack PUBLIC key
-    email: 'sakyiebenezer316@gmail.com@example.com', // you can replace with real email
-    amount: 5000 * 100, // amount in pesewas (₵50 = 5000)
-    currency: 'GHS',
-
-    callback: function (response) {
-      // ✅ PAYMENT SUCCESS
-      document.getElementById('paymentSuccess').classList.remove('hidden');
-
-      document.getElementById('payRef').innerText = response.reference;
-      document.getElementById('payAmount').innerText = '50.00';
-      document.getElementById('payDate').innerText =
-        new Date().toLocaleString();
-
-      alert('Payment successful! Please take a screenshot.');
-    },
-
-    onClose: function () {
-      alert('Payment cancelled');
-    }
-  });
-
-  handler.openIframe();
-}
-
-
-
-
-
-
-function closePaymentOverlay(){
-  document.getElementById('paymentOverlay').style.display = 'none';
-}
-
-      
     </script>
-    <div id="paymentOverlay" style="
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.85);
-display:none;
-justify-content:center;
-align-items:center;
-z-index:9999;
-">
-
-<div style="
-background:white;
-padding:40px;
-border-radius:20px;
-text-align:center;
-max-width:500px;
-width:90%;
-box-shadow:0 20px 60px rgba(0,0,0,0.3);
-">
-
-<h1 style="color:#38b000;">✅ PAYMENT SUCCESSFUL</h1>
-
-<p style="margin-top:15px;">
-<b>Reference:</b> <span id="overlayRef"></span>
-</p>
-
-<p>
-<b>Date:</b> <span id="overlayDate"></span>
-</p>
-
-<p style="margin:20px 0;font-weight:bold;">
-📸 Please screenshot this page and send it to the admin.
-</p>
-
-<button onclick="closePaymentOverlay()" style="
-padding:14px 30px;
-border:none;
-border-radius:10px;
-background:#d90429;
-color:white;
-font-size:16px;
-cursor:pointer;
-">
-Close
-</button>
-
-</div>
-</div>
-
   </body>
 </html>
