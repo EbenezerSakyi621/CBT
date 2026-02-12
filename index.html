@@ -1,829 +1,826 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="manifest" href="manifest.json" />
-    <meta name="theme-color" content="#1a73e8" />
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#1a73e8" />
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a73e8">
 
-    <title>SAKYI'S ELITE CBT</title>
+<title>SAKYI'S ELITE CBT</title>
 
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
 
-      body {
-        font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(135deg, #c7f9cc, #bde0fe);
-        min-height: 100vh;
-        padding: 20px;
-      }
+body {
+font-family: 'Segoe UI', sans-serif;
+background: linear-gradient(135deg, #c7f9cc, #bde0fe);
+min-height: 100vh;
+padding: 20px;
+}
 
-      .container {
-        max-width: 1100px;
-        margin: auto;
-        background: rgba(255, 255, 255, 0.65);
-        backdrop-filter: blur(18px);
-        border-radius: 24px;
-        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
-      }
+.container {
+max-width: 1100px;
+margin: auto;
+background: rgba(255, 255, 255, 0.65);
+backdrop-filter: blur(18px);
+border-radius: 24px;
+box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+}
 
-      .header {
-        background: linear-gradient(135deg, #80ed99, #a0c4ff);
-        padding: 30px;
-        text-align: center;
-      }
+.header {
+background: linear-gradient(135deg, #80ed99, #a0c4ff);
+padding: 30px;
+text-align: center;
+}
 
-      .content {
-        padding: 40px;
-      }
+.content {
+padding: 40px;
+}
 
-      .pay-btn {
-        padding: 14px 28px;
-        border: none;
-        border-radius: 12px;
-        cursor: pointer;
-        font-weight: 600;
-        background: linear-gradient(135deg, #52b788, #74c0fc);
-        color: white;
-      }
+.pay-btn {
+padding: 14px 28px;
+border: none;
+border-radius: 12px;
+cursor: pointer;
+font-weight: 600;
+background: linear-gradient(135deg, #52b788, #74c0fc);
+color: white;
+}
 
-      .selection {
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-        justify-content: center;
-        margin-top: 25px;
-      }
+.selection {
+display: flex;
+gap: 15px;
+flex-wrap: wrap;
+justify-content: center;
+margin-top: 25px;
+}
 
-      .hidden {
-        display: none;
-      }
+.hidden {
+display: none;
+}
 
-      input,
-      select {
-        width: 100%;
-        padding: 12px;
-        border-radius: 10px;
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        margin-top: 10px;
-      }
+input,
+select {
+width: 100%;
+padding: 12px;
+border-radius: 10px;
+border: 1px solid rgba(0, 0, 0, 0.1);
+margin-top: 10px;
+}
 
-      .dashboard {
-        display: grid;
-        grid-template-columns: 300px 1fr;
-        gap: 25px;
-      }
+.dashboard {
+display: grid;
+grid-template-columns: 300px 1fr;
+gap: 25px;
+}
 
-      .profile {
-        background: rgba(255, 255, 255, 0.75);
-        padding: 25px;
-        border-radius: 18px;
-        text-align: center;
-      }
+.profile {
+background: rgba(255, 255, 255, 0.75);
+padding: 25px;
+border-radius: 18px;
+text-align: center;
+}
 
-      .avatar {
-        width: 90px;
-        height: 90px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #74c0fc, #80ed99);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        color: white;
-        margin: auto;
-      }
+.avatar {
+width: 90px;
+height: 90px;
+border-radius: 50%;
+background: linear-gradient(135deg, #74c0fc, #80ed99);
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 2rem;
+color: white;
+margin: auto;
+}
 
-      .question {
-        background: rgba(255, 255, 255, 0.85);
-        padding: 20px;
-        margin: 18px 0;
-        border-radius: 14px;
-      }
+.question {
+background: rgba(255, 255, 255, 0.85);
+padding: 20px;
+margin: 18px 0;
+border-radius: 14px;
+}
 
-      .timer {
-        font-size: 1.2rem;
-        font-weight: bold;
-        color: #d90429;
-      }
+.timer {
+font-size: 1.2rem;
+font-weight: bold;
+color: #d90429;
+}
 
-      .adminBox {
-        background: white;
-        padding: 25px;
-        border-radius: 16px;
-        max-width: 600px;
-        margin: auto;
-      }
-      /* ================================
-   LARGE SCREENS (Desktops >1400px)
+.adminBox {
+background: white;
+padding: 25px;
+border-radius: 16px;
+max-width: 600px;
+margin: auto;
+}
+/* ================================
+  LARGE SCREENS (Desktops >1400px)
 ================================ */
-      @media (min-width: 1400px) {
-        .container {
-          max-width: 1300px;
-        }
+@media (min-width: 1400px) {
+.container {
+max-width: 1300px;
+}
 
-        .dashboard {
-          grid-template-columns: 350px 1fr;
-        }
+.dashboard {
+grid-template-columns: 350px 1fr;
+}
 
-        .content {
-          padding: 60px;
-        }
-      }
+.content {
+padding: 60px;
+}
+}
 
-      /* ================================
-   LAPTOPS / SMALL DESKTOPS
+/* ================================
+  LAPTOPS / SMALL DESKTOPS
 ================================ */
-      @media (max-width: 1200px) {
-        .container {
-          max-width: 95%;
-        }
-      }
+@media (max-width: 1200px) {
+.container {
+max-width: 95%;
+}
+}
 
-      /* ================================
-   TABLETS (iPad, etc.)
+/* ================================
+  TABLETS (iPad, etc.)
 ================================ */
-      @media (max-width: 992px) {
-        .dashboard {
-          grid-template-columns: 1fr;
-        }
+@media (max-width: 992px) {
+.dashboard {
+grid-template-columns: 1fr;
+}
 
-        .profile {
-          margin-bottom: 20px;
-        }
+.profile {
+margin-bottom: 20px;
+}
 
-        .content {
-          padding: 25px;
-        }
-      }
+.content {
+padding: 25px;
+}
+}
 
-      /* ================================
-   LARGE PHONES
+/* ================================
+  LARGE PHONES
 ================================ */
-      @media (max-width: 768px) {
-        body {
-          padding: 10px;
-        }
+@media (max-width: 768px) {
+body {
+padding: 10px;
+}
 
-        .header {
-          padding: 20px;
-        }
+.header {
+padding: 20px;
+}
 
-        .header h1 {
-          font-size: 1.6rem;
-        }
+.header h1 {
+font-size: 1.6rem;
+}
 
-        .pay-btn {
-          width: 100%;
-        }
+.pay-btn {
+width: 100%;
+}
 
-        .selection {
-          flex-direction: column;
-        }
-      }
+.selection {
+flex-direction: column;
+}
+}
 
-      /* ================================
-   SMALL PHONES
-   (iPhone SE 2, iPhone 8, etc.)
+/* ================================
+  SMALL PHONES
+  (iPhone SE 2, iPhone 8, etc.)
 ================================ */
-      @media (max-width: 480px) {
-        .content {
-          padding: 15px;
-        }
+@media (max-width: 480px) {
+.content {
+padding: 15px;
+}
 
-        input,
-        select {
-          font-size: 16px; /* prevents zoom on iPhone */
-        }
+input,
+select {
+font-size: 16px; /* prevents zoom on iPhone */
+}
 
-        .avatar {
-          width: 70px;
-          height: 70px;
-          font-size: 1.5rem;
-        }
+.avatar {
+width: 70px;
+height: 70px;
+font-size: 1.5rem;
+}
 
-        .question {
-          padding: 15px;
-        }
-      }
+.question {
+padding: 15px;
+}
+}
 
-      /* ================================
-   EXTRA SMALL PHONES
-   ✅ iPhone SE (1st Gen - 320px)
+/* ================================
+  EXTRA SMALL PHONES
+  ✅ iPhone SE (1st Gen - 320px)
 ================================ */
-      @media (max-width: 360px) {
-        .header h1 {
-          font-size: 1.3rem;
-        }
+@media (max-width: 360px) {
+.header h1 {
+font-size: 1.3rem;
+}
 
-        .container {
-          border-radius: 14px;
-        }
+.container {
+border-radius: 14px;
+}
 
-        .pay-btn {
-          padding: 12px;
-          font-size: 14px;
-        }
+.pay-btn {
+padding: 12px;
+font-size: 14px;
+}
 
-        .timer {
-          font-size: 1rem;
-        }
-      }
+.timer {
+font-size: 1rem;
+}
+}
 
-      /* ================================
-   ULTRA SMALL DEVICES (320px)
+/* ================================
+  ULTRA SMALL DEVICES (320px)
 ================================ */
-      @media (max-width: 320px) {
-        .header h1 {
-          font-size: 1.1rem;
-        }
+@media (max-width: 320px) {
+.header h1 {
+font-size: 1.1rem;
+}
 
-        .content {
-          padding: 10px;
-        }
-      }
-    </style>
-    <style>
-      /* Center the button (optional) */
-      .button-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background: #f5f7fb;
-      }
+.content {
+padding: 10px;
+}
+}
+</style>
+<style>
+/* Center the button (optional) */
+.button-container {
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+background: #f5f7fb;
+}
 
-      /* Premium Button */
-      .pay-pay-btn {
-        padding: 16px 38px;
-        font-size: 18px;
-        font-weight: 600;
-        color: white;
-        border: none;
-        border-radius: 12px;
-        cursor: pointer;
+/* Premium Button */
+.pay-pay-btn {
+padding: 16px 38px;
+font-size: 18px;
+font-weight: 600;
+color: white;
+border: none;
+border-radius: 12px;
+cursor: pointer;
 
-        background: linear-gradient(135deg, #4facfe, #00f2fe);
+background: linear-gradient(135deg, #4facfe, #00f2fe);
 
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 
-        transition: all 0.3s ease;
-      }
+transition: all 0.3s ease;
+}
 
-      /* Hover Effect */
-      .pay-pay-btn:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
-      }
+/* Hover Effect */
+.pay-pay-btn:hover {
+transform: translateY(-4px);
+box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+}
 
-      /* Click Effect */
-      .pay-pay-btn:active {
-        transform: scale(0.96);
-      }
+/* Click Effect */
+.pay-pay-btn:active {
+transform: scale(0.96);
+}
 
-      /* Shine Animation */
-      .pay-pay-btn::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -75%;
-        width: 50%;
-        height: 100%;
-        background: linear-gradient(
-          120deg,
-          rgba(255, 255, 255, 0.2),
-          rgba(255, 255, 255, 0.6),
-          rgba(255, 255, 255, 0.2)
-        );
-        transform: skewX(-20deg);
-        transition: 0.5s;
-      }
+/* Shine Animation */
+.pay-pay-btn::after {
+content: '';
+position: absolute;
+top: 0;
+left: -75%;
+width: 50%;
+height: 100%;
+background: linear-gradient(
+120deg,
+rgba(255, 255, 255, 0.2),
+rgba(255, 255, 255, 0.6),
+rgba(255, 255, 255, 0.2)
+);
+transform: skewX(-20deg);
+transition: 0.5s;
+}
 
-      .pay-pay-btn:hover::after {
-        left: 130%;
-      }
-    </style>
-  </head>
+.pay-pay-btn:hover::after {
+left: 130%;
+}
+</style>
+</head>
 
-  <body>
-    <div class="container">
-      <div class="header">
-        <h1>🎓 SAKYI'S ELITE CBT</h1>
-        <p>Professional School Testing Platform</p>
-      </div>
+<body>
+<div class="container">
+<div class="header">
+<h1>🎓 SAKYI'S ELITE CBT</h1>
+<p>Professional School Testing Platform</p>
+</div>
 
-      <div class="content">
-        <!-- HOME -->
-        <div id="homeScreen">
-          <h2 style="text-align: center">Student Access</h2>
-          <input id="studentId" placeholder="Enter Student ID" />
-          <div class="selection">
-            <button class="pay-pay-btn" onclick="verifyStudent()">
-              Enter Exam
-            </button>
-          </div>
+<div class="content">
+<!-- HOME -->
+<div id="homeScreen">
+<h2 style="text-align: center">Student Access</h2>
+<input id="studentId" placeholder="Enter Student ID" />
+<div class="selection">
+<button class="pay-pay-btn" onclick="verifyStudent()">
+Enter Exam
+</button>
+</div>
 
-          <hr style="margin: 40px 0" />
+<hr style="margin: 40px 0" />
 
-          <h2 style="text-align: center">Administrator</h2>
-          <div class="selection">
-            <button onclick="payWithPaystack()" class="pay-pay-btn">
-Pay 
+<h2 style="text-align: center">Administrator</h2>
+<div class="selection">
+<button class="pay-pay-btn" onclick="payWithPaystack()">
+Register As Admin
 </button>
 
-            <script src="https://js.paystack.co/v1/inline.js"></script>
+<script src="https://js.paystack.co/v1/inline.js"></script>
 
-            <script>function payWithPaystack() {
+<script>
+function payWithPaystack() {
+let handler = PaystackPop.setup({
+key: 'pk_live_2936dc167ad577c516073c1376b737a5c63eccad',
+email: 'sakyiebenezer316@email.com',
+amount: 10, // 10 GHS = 1000 pesewas
+currency: 'GHS',
 
-  let handler = PaystackPop.setup({
-    key: 'pk_live_2936dc167ad577c516073c1376b737a5c63eccad', // 🔥 replace this
-    email: 'sakyiebenezer316@gmail.com@email.com', // optional
-    amount: 5000 * 100, // ₵50 example
-    currency: 'GHS',
+callback: function (response) {
+alert(
+'Payment successful! Reference: ' + response.reference,
+);
 
-    // ✅ THIS IS YOUR CALLBACK FUNCTION
-    callback: function(response) {
+// Send reference to Firebase here
+const paymentRef = doc(db, 'payments', response.reference);
+setDoc(paymentRef, {
+email: 'sakyiebenezer316@email.com',
+amount: 10,
+currency: 'GHS',
+status: 'success',
+timestamp: new Date(),
+});
 
-      // Show permanent overlay
-      document.getElementById('paymentOverlay').style.display = 'flex';
+// Unlock admin panel
+openAdmin();
+},
 
-      document.getElementById('overlayRef').innerText =
-        response.reference;
+onClose: function () {
+alert('Transaction cancelled');
+},
+});
 
-      document.getElementById('overlayAmount').innerText = "50.00";
+handler.openIframe();
+}
+</script>
 
-      document.getElementById('overlayDate').innerText =
-        new Date().toLocaleString();
-    },
+<button class="pay-pay-btn" onclick="openAdmin()">
+Admin Portal
+</button>
+</div>
+</div>
 
-    onClose: function() {
-      alert('Transaction was not completed.');
-    }
-  });
+<!-- ADMIN LOGIN -->
+<div id="adminLogin" class="hidden adminBox">
+<h2>Admin Login</h2>
+<input id="adminEmail" placeholder="Email" />
+<input id="adminPass" type="password" placeholder="Password" />
 
-  handler.openIframe();
+<div class="selection">
+<button class="pay-btn" onclick="loginAdmin()">Login</button>
+<button class="pay-btn" onclick="goHome()">Cancel</button>
+</div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" class="hidden adminBox">
+<h2>Admin Panel</h2>
+<button class="pay-btn" onclick="logoutAdmin()">Logout</button>
+
+<h3 style="margin-top: 20px">Add Student</h3>
+<input id="newStudentId" />
+<input id="newStudentName" />
+<button class="pay-btn" onclick="addStudent()">Save Student</button>
+
+<h3 style="margin-top: 20px">Upload Question</h3>
+
+<select id="adminClass">
+<option value="jhs1">JHS1</option>
+<option value="jhs2">JHS2</option>
+<option value="jhs3">JHS3</option>
+</select>
+
+<input
+id="adminSubject"
+placeholder="Subject (ENGLISH, MATHEMATICS, SCIENCE)"
+/>
+<input id="adminQuestion" placeholder="Question" />
+<input id="adminOptions" placeholder="Options comma separated" />
+<input id="adminAnswer" placeholder="Correct Answer" />
+
+<button class="pay-btn" onclick="addQuestion()">Upload</button>
+
+<h3 style="margin-top: 25px">Manage Questions</h3>
+<div id="questionList"></div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden">
+<div class="dashboard">
+<div class="profile">
+<div class="avatar" id="avatar"></div>
+<h3 id="welcome"></h3>
+<button class="pay-btn" onclick="goHome()">Logout</button>
+</div>
+
+<div>
+<h2>Select Class</h2>
+
+<div class="selection">
+<button class="pay-btn" onclick="selectClass('jhs1')">
+JHS 1
+</button>
+<button class="pay-btn" onclick="selectClass('jhs2')">
+JHS 2
+</button>
+<button class="pay-btn" onclick="selectClass('jhs3')">
+JHS 3
+</button>
+</div>
+
+<div id="subjects" class="selection" style="margin-top: 30px">
+Preparing your exam...
+</div>
+</div>
+</div>
+</div>
+
+<!-- QUIZ -->
+<div id="quizScreen" class="hidden">
+<div class="timer" id="timer"></div>
+
+<form id="quizForm"></form>
+
+<div class="selection">
+<button class="pay-btn" type="button" onclick="gradeTest()">
+Submit
+</button>
+</div>
+
+<h2 id="result" class="hidden"></h2>
+<div id="resultSlip" class="hidden"></div>
+
+<div class="selection hidden" id="printBox">
+<button class="pay-btn" onclick="printSlip()">
+🖨 Print Result
+</button>
+</div>
+
+<div class="selection hidden" id="goBackBox">
+<button class="pay-btn" onclick="goHome()">Go Back Home</button>
+</div>
+</div>
+</div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js';
+
+import {
+getFirestore,
+collection,
+getDocs,
+doc,
+getDoc,
+setDoc,
+addDoc,
+deleteDoc,
+} from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js';
+
+import {
+getAuth,
+signInWithEmailAndPassword,
+signOut,
+setPersistence,
+browserSessionPersistence,
+} from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js';
+
+const firebaseConfig = {
+apiKey: 'AIzaSyAZ7SvvAECv7I1JNy0u1nUsC6q-8-5BUiY',
+authDomain: 'elite-cbt-system-97ffa.firebaseapp.com',
+projectId: 'elite-cbt-system-97ffa',
+storageBucket: 'elite-cbt-system-97ffa.firebasestorage.app',
+messagingSenderId: '978602825271',
+appId: '1:978602825271:web:a2c26f3853ff155a4991b2',
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+setPersistence(auth, browserSessionPersistence);
+
+// STATE
+let questionBank = { jhs1: {}, jhs2: {}, jhs3: {} };
+let questionsLoaded = false;
+let currentStudent = null;
+let currentQuestions = [];
+let timerInterval;
+
+// UI helpers
+function hideAll() {
+document
+.querySelectorAll(
+'#homeScreen,#dashboard,#quizScreen,#adminLogin,#adminPanel',
+)
+.forEach((el) => el.classList.add('hidden'));
 }
 
-
-// CLOSE BUTTON
-function closePaymentOverlay(){
-  document.getElementById('paymentOverlay').style.display = 'none';
+function goHome() {
+hideAll();
+homeScreen.classList.remove('hidden');
 }
 
-            </script>
+goHome();
 
-            <button class="pay-pay-btn" onclick="openAdmin()">
-              Admin Portal
-            </button>
-          </div>
-        </div>
+// LOAD QUESTIONS (FIXED)
+async function loadQuestions() {
+questionBank = { jhs1: {}, jhs2: {}, jhs3: {} };
 
-        <!-- ADMIN LOGIN -->
-        <div id="adminLogin" class="hidden adminBox">
-          <h2>Admin Login</h2>
-          <input id="adminEmail" placeholder="Email" />
-          <input id="adminPass" type="password" placeholder="Password" />
+const snap = await getDocs(collection(db, 'questions'));
 
-          <div class="selection">
-            <button class="pay-btn" onclick="loginAdmin()">Login</button>
-            <button class="pay-btn" onclick="goHome()">Cancel</button>
-          </div>
-        </div>
+snap.forEach((docSnap) => {
+const d = docSnap.data();
 
-        <!-- ADMIN PANEL -->
-        <div id="adminPanel" class="hidden adminBox">
-          <h2>Admin Panel</h2>
-          <button class="pay-btn" onclick="logoutAdmin()">Logout</button>
+if (!questionBank[d.level][d.subject])
+questionBank[d.level][d.subject] = [];
 
-          <h3 style="margin-top: 20px">Add Student</h3>
-          <input id="newStudentId" />
-          <input id="newStudentName" />
-          <button class="pay-btn" onclick="addStudent()">Save Student</button>
+questionBank[d.level][d.subject].push(d);
+});
 
-          <h3 style="margin-top: 20px">Upload Question</h3>
+questionsLoaded = true;
+}
 
-          <select id="adminClass">
-            <option value="jhs1">JHS1</option>
-            <option value="jhs2">JHS2</option>
-            <option value="jhs3">JHS3</option>
-          </select>
+loadQuestions();
 
-          <input
-            id="adminSubject"
-            placeholder="Subject (ENGLISH, MATHEMATICS, SCIENCE)"
-          />
-          <input id="adminQuestion" placeholder="Question" />
-          <input id="adminOptions" placeholder="Options comma separated" />
-          <input id="adminAnswer" placeholder="Correct Answer" />
+// TIMER CALCULATOR
+function calculateExamTime(subject, count) {
+subject = subject.toLowerCase();
 
-          <button class="pay-btn" onclick="addQuestion()">Upload</button>
+let seconds = 60;
 
-          <h3 style="margin-top: 25px">Manage Questions</h3>
-          <div id="questionList"></div>
-        </div>
+if (subject === 'ENGLISH') seconds = 45;
+if (subject === 'MATHEMATICS' || subject === 'MATHEMATICS')
+seconds = 60;
+if (subject === 'SCIENCE') seconds = 60;
 
-        <!-- DASHBOARD -->
-        <div id="dashboard" class="hidden">
-          <div class="dashboard">
-            <div class="profile">
-              <div class="avatar" id="avatar"></div>
-              <h3 id="welcome"></h3>
-              <button class="pay-btn" onclick="goHome()">Logout</button>
-            </div>
+return seconds * count;
+}
 
-            <div>
-              <h2>Select Class</h2>
+// ADMIN
+function openAdmin() {
+hideAll();
+adminLogin.classList.remove('hidden');
+}
 
-              <div class="selection">
-                <button class="pay-btn" onclick="selectClass('jhs1')">
-                  JHS 1
-                </button>
-                <button class="pay-btn" onclick="selectClass('jhs2')">
-                  JHS 2
-                </button>
-                <button class="pay-btn" onclick="selectClass('jhs3')">
-                  JHS 3
-                </button>
-              </div>
+async function loginAdmin() {
+const email = adminEmail.value.trim();
 
-              <div id="subjects" class="selection" style="margin-top: 30px">
-                Preparing your exam...
-              </div>
-            </div>
-          </div>
-        </div>
+// change this to YOUR admin email
+if (email !== 's@gmail.com') {
+alert('Unauthorized Admin');
+return;
+}
 
-        <!-- QUIZ -->
-        <div id="quizScreen" class="hidden">
-          <div class="timer" id="timer"></div>
+await signInWithEmailAndPassword(auth, email, adminPass.value);
 
-          <form id="quizForm"></form>
+hideAll();
+adminPanel.classList.remove('hidden');
 
-          <div class="selection">
-            <button class="pay-btn" type="button" onclick="gradeTest()">
-              Submit
-            </button>
-          </div>
+loadAdminQuestions();
+}
 
-          <h2 id="result" class="hidden"></h2>
-          <div id="resultSlip" class="hidden"></div>
+function logoutAdmin() {
+signOut(auth);
+goHome();
+}
 
-          <div class="selection hidden" id="printBox">
-            <button class="pay-btn" onclick="printSlip()">
-              🖨 Print Result
-            </button>
-          </div>
+async function addStudent() {
+await setDoc(doc(db, 'students', newStudentId.value), {
+name: newStudentName.value,
+});
+alert('Student added');
+}
 
-          <div class="selection hidden" id="goBackBox">
-            <button class="pay-btn" onclick="goHome()">Go Back Home</button>
-          </div>
-        </div>
-      </div>
-    </div>
+async function addQuestion() {
+await addDoc(collection(db, 'questions'), {
+level: adminClass.value,
+subject: adminSubject.value.toLowerCase(),
+q: adminQuestion.value,
+options: adminOptions.value.split(',').map((o) => o.trim()),
+answer: adminAnswer.value,
+});
 
-    <script type="module">
-      import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js';
+alert('Uploaded');
 
-      import {
-        getFirestore,
-        collection,
-        getDocs,
-        doc,
-        getDoc,
-        setDoc,
-        addDoc,
-        deleteDoc,
-      } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js';
+loadQuestions();
+loadAdminQuestions();
+}
 
-      import {
-        getAuth,
-        signInWithEmailAndPassword,
-        signOut,
-        setPersistence,
-        browserSessionPersistence,
-      } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js';
+async function loadAdminQuestions() {
+const list = document.getElementById('questionList');
+list.innerHTML = 'Loading...';
 
-      const firebaseConfig = {
-        apiKey: 'AIzaSyAZ7SvvAECv7I1JNy0u1nUsC6q-8-5BUiY',
-        authDomain: 'elite-cbt-system-97ffa.firebaseapp.com',
-        projectId: 'elite-cbt-system-97ffa',
-        storageBucket: 'elite-cbt-system-97ffa.firebasestorage.app',
-        messagingSenderId: '978602825271',
-        appId: '1:978602825271:web:a2c26f3853ff155a4991b2',
-      };
+const snap = await getDocs(collection(db, 'questions'));
 
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
-      const auth = getAuth(app);
+list.innerHTML = '';
 
-      setPersistence(auth, browserSessionPersistence);
+snap.forEach((docSnap) => {
+const q = docSnap.data();
 
-      // STATE
-      let questionBank = { jhs1: {}, jhs2: {}, jhs3: {} };
-      let questionsLoaded = false;
-      let currentStudent = null;
-      let currentQuestions = [];
-      let timerInterval;
-
-      // UI helpers
-      function hideAll() {
-        document
-          .querySelectorAll(
-            '#homeScreen,#dashboard,#quizScreen,#adminLogin,#adminPanel',
-          )
-          .forEach((el) => el.classList.add('hidden'));
-      }
-
-      function goHome() {
-        hideAll();
-        homeScreen.classList.remove('hidden');
-      }
-
-      goHome();
-
-      // LOAD QUESTIONS (FIXED)
-      async function loadQuestions() {
-        questionBank = { jhs1: {}, jhs2: {}, jhs3: {} };
-
-        const snap = await getDocs(collection(db, 'questions'));
-
-        snap.forEach((docSnap) => {
-          const d = docSnap.data();
-
-          if (!questionBank[d.level][d.subject])
-            questionBank[d.level][d.subject] = [];
-
-          questionBank[d.level][d.subject].push(d);
-        });
-
-        questionsLoaded = true;
-      }
-
-      loadQuestions();
-
-      // TIMER CALCULATOR
-      function calculateExamTime(subject, count) {
-        subject = subject.toLowerCase();
-
-        let seconds = 60;
-
-        if (subject === 'ENGLISH') seconds = 45;
-        if (subject === 'MATHEMATICS' || subject === 'MATHEMATICS')
-          seconds = 60;
-        if (subject === 'SCIENCE') seconds = 60;
-
-        return seconds * count;
-      }
-
-      // ADMIN
-      function openAdmin() {
-        hideAll();
-        adminLogin.classList.remove('hidden');
-      }
-
-      async function loginAdmin() {
-        const email = adminEmail.value.trim();
-
-        // change this to YOUR admin email
-        if (email !== 's@gmail.com') {
-          alert('Unauthorized Admin');
-          return;
-        }
-
-        await signInWithEmailAndPassword(auth, email, adminPass.value);
-
-        hideAll();
-        adminPanel.classList.remove('hidden');
-
-        loadAdminQuestions();
-      }
-
-      function logoutAdmin() {
-        signOut(auth);
-        goHome();
-      }
-
-      async function addStudent() {
-        await setDoc(doc(db, 'students', newStudentId.value), {
-          name: newStudentName.value,
-        });
-        alert('Student added');
-      }
-
-      async function addQuestion() {
-        await addDoc(collection(db, 'questions'), {
-          level: adminClass.value,
-          subject: adminSubject.value.toLowerCase(),
-          q: adminQuestion.value,
-          options: adminOptions.value.split(',').map((o) => o.trim()),
-          answer: adminAnswer.value,
-        });
-
-        alert('Uploaded');
-
-        loadQuestions();
-        loadAdminQuestions();
-      }
-
-      async function loadAdminQuestions() {
-        const list = document.getElementById('questionList');
-        list.innerHTML = 'Loading...';
-
-        const snap = await getDocs(collection(db, 'questions'));
-
-        list.innerHTML = '';
-
-        snap.forEach((docSnap) => {
-          const q = docSnap.data();
-
-          list.innerHTML += `
+list.innerHTML += `
 <div style="border:1px solid #ddd;padding:10px;margin:10px;border-radius:10px">
 <b>${q.q}</b>
 <br><br>
 <button onclick="deleteQuestion('${docSnap.id}')" class="pay-btn">Delete</button>
 </div>`;
-        });
-      }
+});
+}
 
-      window.deleteQuestion = async (id) => {
-        await deleteDoc(doc(db, 'questions', id));
-        loadAdminQuestions();
-        loadQuestions();
-      };
+window.deleteQuestion = async (id) => {
+await deleteDoc(doc(db, 'questions', id));
+loadAdminQuestions();
+loadQuestions();
+};
 
-      // STUDENT
-      async function verifyStudent() {
-        const snap = await getDoc(doc(db, 'students', studentId.value.trim()));
+// STUDENT
+async function verifyStudent() {
+const snap = await getDoc(doc(db, 'students', studentId.value.trim()));
 
-        if (!snap.exists()) {
-          alert('Student not found');
-          return;
-        }
+if (!snap.exists()) {
+alert('Student not found');
+return;
+}
 
-        currentStudent = snap.data();
+currentStudent = snap.data();
 
-        hideAll();
-        dashboard.classList.remove('hidden');
+hideAll();
+dashboard.classList.remove('hidden');
 
-        welcome.innerText = `Welcome, ${currentStudent.name}`;
-        avatar.innerText = currentStudent.name.charAt(0).toUpperCase();
-      }
+welcome.innerText = `Welcome, ${currentStudent.name}`;
+avatar.innerText = currentStudent.name.charAt(0).toUpperCase();
+}
 
-      // FIXED SUBJECT LOADER
-      function selectClass(level) {
-        if (!questionsLoaded) {
-          subjects.innerHTML = 'Preparing your exam... Please wait.';
-          return;
-        }
+// FIXED SUBJECT LOADER
+function selectClass(level) {
+if (!questionsLoaded) {
+subjects.innerHTML = 'Preparing your exam... Please wait.';
+return;
+}
 
-        const subjectsDiv = document.getElementById('subjects');
-        subjectsDiv.innerHTML = '';
+const subjectsDiv = document.getElementById('subjects');
+subjectsDiv.innerHTML = '';
 
-        const subs = Object.keys(questionBank[level]);
+const subs = Object.keys(questionBank[level]);
 
-        if (subs.length === 0) {
-          subjectsDiv.innerHTML = '<b>No subjects uploaded yet.</b>';
-          return;
-        }
+if (subs.length === 0) {
+subjectsDiv.innerHTML = '<b>No subjects uploaded yet.</b>';
+return;
+}
 
-        subs.forEach((sub) => {
-          subjectsDiv.innerHTML += `<button class="pay-btn" onclick="startExam('${level}','${sub}')">${sub}</button>`;
-        });
-      }
+subs.forEach((sub) => {
+subjectsDiv.innerHTML += `<button class="pay-btn" onclick="startExam('${level}','${sub}')">${sub}</button>`;
+});
+}
 
-      function startExam(level, subject) {
-        const questions = [...questionBank[level][subject]].sort(
-          () => Math.random() - 0.5,
-        );
+function startExam(level, subject) {
+const questions = [...questionBank[level][subject]].sort(
+() => Math.random() - 0.5,
+);
 
-        currentQuestions = questions;
+currentQuestions = questions;
 
-        hideAll();
-        quizScreen.classList.remove('hidden');
+hideAll();
+quizScreen.classList.remove('hidden');
 
-        quizForm.innerHTML = '';
+quizForm.innerHTML = '';
 
-        questions.forEach((q, i) => {
-          const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+questions.forEach((q, i) => {
+const shuffled = [...q.options].sort(() => Math.random() - 0.5);
 
-          quizForm.innerHTML += `
+quizForm.innerHTML += `
 <div class="question">
 <p>${q.q}</p>
 
 ${shuffled
-  .map(
-    (o) =>
-      `<label>
+ .map(
+   (o) =>
+     `<label>
 <input type="radio" name="q${i}" value="${o}"> ${o}
 </label><br>`,
-  )
-  .join('')}
+ )
+ .join('')}
 
 </div>`;
-        });
+});
 
-        const seconds = calculateExamTime(subject, questions.length);
+const seconds = calculateExamTime(subject, questions.length);
 
-        alert(`You have ${Math.ceil(seconds / 60)} minutes.`);
+alert(`You have ${Math.ceil(seconds / 60)} minutes.`);
 
-        startTimer(seconds);
-      }
+startTimer(seconds);
+}
 
-      function startTimer(seconds) {
-        timerInterval = setInterval(() => {
-          const m = Math.floor(seconds / 60);
-          const s = seconds % 60;
+function startTimer(seconds) {
+timerInterval = setInterval(() => {
+const m = Math.floor(seconds / 60);
+const s = seconds % 60;
 
-          timer.innerText = `⏳ Time Remaining: ${m}:${s < 10 ? '0' : ''}${s}`;
+timer.innerText = `⏳ Time Remaining: ${m}:${s < 10 ? '0' : ''}${s}`;
 
-          seconds--;
+seconds--;
 
-          if (seconds < 0) {
-            clearInterval(timerInterval);
-            gradeTest();
-          }
-        }, 1000);
-      }
+if (seconds < 0) {
+clearInterval(timerInterval);
+gradeTest();
+}
+}, 1000);
+}
 
-      function gradeTest() {
-        clearInterval(timerInterval);
+function gradeTest() {
+clearInterval(timerInterval);
 
-        let score = 0;
+let score = 0;
 
-        currentQuestions.forEach((q, i) => {
-          const picked = document.querySelector(`input[name="q${i}"]:checked`);
-          const questionBox = document.querySelectorAll('.question')[i];
+currentQuestions.forEach((q, i) => {
+const picked = document.querySelector(`input[name="q${i}"]:checked`);
+const questionBox = document.querySelectorAll('.question')[i];
 
-          // disable all radios
-          document
-            .querySelectorAll(`input[name="q${i}"]`)
-            .forEach((r) => (r.disabled = true));
+// disable all radios
+document
+.querySelectorAll(`input[name="q${i}"]`)
+.forEach((r) => (r.disabled = true));
 
-          if (picked && picked.value === q.answer) {
-            score++;
+if (picked && picked.value === q.answer) {
+score++;
 
-            questionBox.style.border = '3px solid #38b000'; // green
-            questionBox.style.background = '#e9fbe5';
+questionBox.style.border = '3px solid #38b000'; // green
+questionBox.style.background = '#e9fbe5';
 
-            questionBox.innerHTML += `<p style="color:#2b9348;font-weight:bold;">
-      ✅ Correct
-      </p>`;
-          } else {
-            questionBox.style.border = '3px solid #d90429'; // red
-            questionBox.style.background = '#ffe5e5';
+questionBox.innerHTML += `<p style="color:#2b9348;font-weight:bold;">
+     ✅ Correct
+     </p>`;
+} else {
+questionBox.style.border = '3px solid #d90429'; // red
+questionBox.style.background = '#ffe5e5';
 
-            questionBox.innerHTML += `
-      <p style="color:#d90429;font-weight:bold;">
-      ❌ Wrong
-      </p>
+questionBox.innerHTML += `
+     <p style="color:#d90429;font-weight:bold;">
+     ❌ Wrong
+     </p>
 
-      <p style="color:#2b9348;font-weight:bold;">
-      Correct Answer: ${q.answer}
-      </p>`;
-          }
-        });
+     <p style="color:#2b9348;font-weight:bold;">
+     Correct Answer: ${q.answer}
+     </p>`;
+}
+});
 
-        result.classList.remove('hidden');
+result.classList.remove('hidden');
 
-        result.innerText = `${currentStudent.name}, you scored ${Math.round(
-          (score / currentQuestions.length) * 100,
-        )}%`;
-        generateSlip(score);
+result.innerText = `${currentStudent.name}, you scored ${Math.round(
+         (score / currentQuestions.length) * 100,
+       )}%`;
+generateSlip(score);
 
-        goBackBox.classList.remove('hidden');
-      }
-      document.addEventListener('visibilitychange', () => {
-        if (
-          document.hidden &&
-          quizScreen.classList.contains('hidden') === false
-        ) {
-          alert('Tab switch detected!');
-          gradeTest();
-        }
-      });
-      // ADD THIS LINE: saves the subject for the result slip
+goBackBox.classList.remove('hidden');
+}
+document.addEventListener('visibilitychange', () => {
+if (
+document.hidden &&
+quizScreen.classList.contains('hidden') === false
+) {
+alert('Tab switch detected!');
+gradeTest();
+}
+});
+// ADD THIS LINE: saves the subject for the result slip
 
-      // expose
-      window.verifyStudent = verifyStudent;
-      window.openAdmin = openAdmin;
-      window.loginAdmin = loginAdmin;
-      window.logoutAdmin = logoutAdmin;
-      window.addStudent = addStudent;
-      window.addQuestion = addQuestion;
-      window.selectClass = selectClass;
-      window.startExam = startExam;
-      window.gradeTest = gradeTest;
-      window.goHome = goHome;
-      function generateSlip(score) {
-        const percent = Math.round((score / currentQuestions.length) * 100);
+// expose
+window.verifyStudent = verifyStudent;
+window.openAdmin = openAdmin;
+window.loginAdmin = loginAdmin;
+window.logoutAdmin = logoutAdmin;
+window.addStudent = addStudent;
+window.addQuestion = addQuestion;
+window.selectClass = selectClass;
+window.startExam = startExam;
+window.gradeTest = gradeTest;
+window.goHome = goHome;
+function generateSlip(score) {
+const percent = Math.round((score / currentQuestions.length) * 100);
 
-        const slip = `
+const slip = `
 <div style="
 background:white;
 padding:30px;
@@ -849,80 +846,22 @@ ${percent >= 50 ? 'PASS' : 'FAIL'}
 </div>
 `;
 
-        resultSlip.innerHTML = slip;
-        resultSlip.classList.remove('hidden');
-        printBox.classList.remove('hidden');
-      }
-      window.printSlip = () => {
-        const w = window.open('');
-        w.document.write(resultSlip.innerHTML);
-        w.print();
-      };
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js');
-      }
+resultSlip.innerHTML = slip;
+resultSlip.classList.remove('hidden');
+printBox.classList.remove('hidden');
+}
+window.printSlip = () => {
+const w = window.open('');
+w.document.write(resultSlip.innerHTML);
+w.print();
+};
+if ('serviceWorker' in navigator) {
+navigator.serviceWorker.register('/service-worker.js');
+}
       if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("/service-worker.js");
 }
 
-    </script>
-    <script src="https://js.paystack.co/v1/inline.js"></script>
-<!-- PAYMENT SUCCESS OVERLAY -->
-<div id="paymentOverlay" style="
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.9);
-display:none;
-justify-content:center;
-align-items:center;
-z-index:9999;
-">
-
-<div style="
-background:white;
-padding:40px;
-border-radius:20px;
-text-align:center;
-max-width:500px;
-width:90%;
-box-shadow:0 20px 60px rgba(0,0,0,0.3);
-">
-
-<h1 style="color:#38b000;">✅ PAYMENT SUCCESSFUL</h1>
-
-<p style="margin-top:20px;">
-<b>Reference:</b> <span id="overlayRef"></span>
-</p>
-
-<p>
-<b>Amount:</b> ₵<span id="overlayAmount"></span>
-</p>
-
-<p>
-<b>Date:</b> <span id="overlayDate"></span>
-</p>
-
-<p style="margin:20px 0;font-weight:bold;">
-📸 Please screenshot this page and send it to the admin.
-</p>
-
-<button onclick="closePaymentOverlay()" style="
-padding:14px 30px;
-border:none;
-border-radius:10px;
-background:#d90429;
-color:white;
-font-size:16px;
-cursor:pointer;
-">
-Close
-</button>
-
-</div>
-</div>
-
-  </body>
+</script>
+</body>
 </html>
