@@ -84,6 +84,24 @@ pointer-events:none;
         justify-content: center;
         align-items: center;
       }
+      .watermark {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-image: url("watermack.png"); /* Replace with your image */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  width: 60vw;              /* Responsive width */
+  height: 60vw;             /* Keep square ratio */
+  max-width: 500px;         /* Desktop limit */
+  max-height: 500px;
+  opacity: 0.06;            /* Light watermark */
+  pointer-events: none;
+  z-index: 0;
+}
+
 
       /* BOX */
       .modal-box {
@@ -268,10 +286,19 @@ pointer-events:none;
           font-size: 20px;
         }
       }
+      @media (max-width: 480px) {
+  .watermark {
+    width: 80vw;
+    height: 80vw;
+    opacity: 0.05;
+  }
+}
+
     </style>
   </head>
 
   <body>
+     <div class="watermark"></div>
     <button class="pay-btn" onclick="payWithPaystack()">Make Payment</button>
 
     <!-- ✅ PERMANENT MODAL -->
