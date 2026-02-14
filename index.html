@@ -210,6 +210,25 @@ content="Professional computer-based testing platform for students." />
         }
       }
 
+
+      .watermark {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-image: url("logo.png"); /* Replace with your image */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  width: 60vw;              /* Responsive width */
+  height: 60vw;             /* Keep square ratio */
+  max-width: 500px;         /* Desktop limit */
+  max-height: 500px;
+  opacity: 0.06;            /* Light watermark */
+  pointer-events: none;
+  z-index: 0;
+}
+
       /* ================================
   SMALL PHONES
   (iPhone SE 2, iPhone 8, etc.)
@@ -326,6 +345,14 @@ content="Professional computer-based testing platform for students." />
         transform: skewX(-20deg);
         transition: 0.5s;
       }
+      @media (max-width: 480px) {
+  .watermark {
+    width: 80vw;
+    height: 80vw;
+    opacity: 0.05;
+  }
+}
+
 
       .pay-pay-btn:hover::after {
         left: 130%;
@@ -349,6 +376,7 @@ content="Professional computer-based testing platform for students." />
   </head>
 
   <body>
+      <div class="watermark"></div>
     <div class="container">
       <div class="header">
         <h1>🎓 SKY ELITE CBT</h1>
