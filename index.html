@@ -370,6 +370,7 @@ content="Professional computer-based testing platform for students." />
  }
 }
 </script>
+<script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
 
   </head>
 
@@ -585,6 +586,12 @@ content="Professional computer-based testing platform for students." />
     </div>
 
     <script type="module">
+      async function loadFaceModel() {
+  await faceapi.nets.tinyFaceDetector.loadFromUri(
+    "https://cdn.jsdelivr.net/npm/face-api.js/weights"
+  );
+}
+
       import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js';
 
       import {
@@ -796,6 +803,7 @@ content="Professional computer-based testing platform for students." />
 
 
 
+loadFaceModel();
 
 let cameraStream = null;
 
@@ -823,6 +831,40 @@ function stopCamera() {
 
 
 
+let faceInterval;
+let missingFaceSeconds = 0;
+
+function monitorFace() {
+  const video = document.getElementById("studentCamera");
+
+  faceInterval = setInterval(async () => {
+
+    const detection = await faceapi.detectSingleFace(
+      video,
+      new faceapi.TinyFaceDetectorOptions()
+    );
+
+    if (!detection) {
+      missingFaceSeconds += 2;
+
+      console.log("No face detected");
+
+      if (missingFaceSeconds >= 10) {
+        alert("Face not detected. Exam will be submitted.");
+        gradeTest();
+      }
+
+    } else {
+      missingFaceSeconds = 0;
+    }
+
+  }, 2000); // check every 2 seconds
+}
+
+
+
+
+      
       
 
       function startExam(level, subject) {
@@ -835,6 +877,8 @@ function stopCamera() {
         hideAll();
         quizScreen.classList.remove('hidden');
 startCamera();
+        monitorFace();
+
 if (!navigator.mediaDevices) {
   alert("Camera not supported on this device.");
   return;
@@ -885,6 +929,8 @@ ${shuffled
       }
 
       function gradeTest() {
+        clearInterval(faceInterval);
+
         clearInterval(timerInterval);
 stopCamera();
 
