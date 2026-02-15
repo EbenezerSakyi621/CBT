@@ -8,15 +8,15 @@
     <meta name="theme-color" content="#1a73e8" />
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#1a73e8" />
-    <title>SkyElite Assessment Portal</title>
+    <title>SAKYI'S ELITE CBT | School Examination Platform</title>
 
 <meta name="description"
 content="SAKYI'S ELITE CBT is a professional computer-based testing platform for junior high school students. Take exams online, get instant results, and improve academic performance." />
 
 <meta name="keywords"
-content=" JHS, CBT system,SkyElite Assessment Portal, school exams, online testing, junior high school exams, Ghana CBT, student examination portal" />
+content="SAKYI JHS, CBT system,SAKYI'S ELITE CBT, school exams, online testing, junior high school exams, Ghana CBT, student examination portal" />
 
-<meta name="author" content="SkyElite Assessment Portal" />
+<meta name="author" content="SAKYI'S ELITE CBT" />
 
 <!-- GOOGLE SEARCH VERIFICATION (optional later) -->
 <meta name="robots" content="index, follow" />
@@ -27,7 +27,7 @@ content=" JHS, CBT system,SkyElite Assessment Portal, school exams, online testi
 content="Professional computer-based testing platform for students." />
 <meta property="og:type" content="website" />
 <meta property="og:image" content="https://ibb.co/Fqw65Rgj" />
-<meta property="og:url" content="https://skyeliteassessmentportal.vercel.app/ />
+<meta property="og:url" content="https://sakyielitecbt.vercel.app/" />
 
 <link rel="icon" type="image/png" href="watermack.png">
 
@@ -355,6 +355,23 @@ content="Professional computer-based testing platform for students." />
       .pay-pay-btn:hover::after {
         background: #2563EB;
       }
+
+       #cameraContainer {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 220px;
+        background: var(--card);
+        padding: 10px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        z-index: 1000;
+      }
+
+      #cameraContainer video {
+        width: 100%;
+        border-radius: 8px;
+      }
     </style>
     <script type="application/ld+json">
 {
@@ -370,7 +387,6 @@ content="Professional computer-based testing platform for students." />
  }
 }
 </script>
-<script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
 
   </head>
 
@@ -378,7 +394,7 @@ content="Professional computer-based testing platform for students." />
       <div class="watermark"></div>
     <div class="container">
       <div class="header">
-        <h1>🎓 SkyElite Assessment Portal</h1>
+        <h1>🎓 SKY ELITE CBT</h1>
         <p>Professional School Testing Platform</p>
       </div>
 
@@ -501,16 +517,59 @@ content="Professional computer-based testing platform for students." />
               <h3 id="welcome"></h3>
               <button class="pay-btn" onclick="goHome()">Logout</button>
             </div>
-<div id="cameraBox" style="margin-bottom:20px;text-align:center;">
-  <video id="cam" autoplay playsinline style="width:400px;border:3px solid white;"></video>
-</div>
-<script>
-async function start() {
-  const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-  document.getElementById("cam").srcObject = stream;
-}
-start();
-</script>
+
+
+
+ <!-- Live Camera -->
+    <div id="cameraContainer" class="hidden">
+      <p style="font-size: 12px">🎥 Live Monitoring</p>
+      <video id="studentCamera" autoplay muted playsinline></video>
+    </div>
+
+ <script>
+      let cameraStream = null;
+
+      async function startCamera() {
+        try {
+          const video = document.getElementById('studentCamera');
+
+          cameraStream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: false,
+          });
+
+          video.srcObject = cameraStream;
+          await video.play();
+        } catch (err) {
+          alert('Camera permission is required to take this exam.');
+        }
+      }
+
+      function stopCamera() {
+        if (cameraStream) {
+          cameraStream.getTracks().forEach((track) => track.stop());
+          cameraStream = null;
+        }
+      }
+
+      async function startExam() {
+        document.getElementById('homeScreen').classList.add('hidden');
+        document.getElementById('quizScreen').classList.remove('hidden');
+        document.getElementById('cameraContainer').classList.remove('hidden');
+
+        await startCamera();
+      }
+
+      function submitExam() {
+        stopCamera();
+        document.getElementById('cameraContainer').classList.add('hidden');
+
+        alert('Exam submitted successfully!');
+        location.reload();
+      }
+    </script>
+
+            
             <div>
               <h2>Select Class</h2>
 
@@ -535,38 +594,6 @@ start();
 
         <!-- QUIZ -->
         <div id="quizScreen" class="hidden">
-          <!-- Live Camera Monitor -->
-<div id="cameraContainer" style="
-  position:fixed;
-  top:20px;
-  right:20px;
-  width:220px;
-  background:#1E293B;
-  padding:10px;
-  border-radius:12px;
-  border:1px solid #334155;
-  box-shadow:0 10px 25px rgba(0,0,0,0.5);
-  z-index:999;
-">
-
-  <p style="font-size:12px;margin-bottom:5px;color:#94A3B8;">
-    🎥 Live Monitoring
-  </p>
-
-  <video
-  id="studentCamera"
-  autoplay
-  muted
-  playsinline
-  style="
-    width:300px;
-    height:220px;
-    background:red;
-    border:3px solid yellow;
-  ">
-</video>
-</div>
-
           <div class="timer" id="timer"></div>
 
           <form id="quizForm"></form>
@@ -594,12 +621,6 @@ start();
     </div>
 
     <script type="module">
-      async function loadFaceModel() {
-  await faceapi.nets.tinyFaceDetector.loadFromUri(
-    "https://cdn.jsdelivr.net/npm/face-api.js/weights"
-  );
-}
-
       import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js';
 
       import {
@@ -809,69 +830,6 @@ start();
         });
       }
 
-
-
-loadFaceModel();
-
-let cameraStream = null;
-
-async function startCamera() {
-  try {
-    const video = document.getElementById("studentCamera");
-
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: false
-    });
-
-    video.srcObject = stream;
-
-    await video.play();   // 🔥 VERY IMPORTANT
-
-  } catch (error) {
-    console.error(error);
-    alert("Camera access failed.");
-  }
-}
-
-
-
-let faceInterval;
-let missingFaceSeconds = 0;
-
-function monitorFace() {
-  const video = document.getElementById("studentCamera");
-
-  faceInterval = setInterval(async () => {
-
-    const detection = await faceapi.detectSingleFace(
-      video,
-      new faceapi.TinyFaceDetectorOptions()
-    );
-
-    if (!detection) {
-      missingFaceSeconds += 2;
-
-      console.log("No face detected");
-
-      if (missingFaceSeconds >= 10) {
-        alert("Face not detected. Exam will be submitted.");
-        gradeTest();
-      }
-
-    } else {
-      missingFaceSeconds = 0;
-    }
-
-  }, 2000); // check every 2 seconds
-}
-
-
-
-
-      
-      
-
       function startExam(level, subject) {
         const questions = [...questionBank[level][subject]].sort(
           () => Math.random() - 0.5,
@@ -881,13 +839,6 @@ function monitorFace() {
 
         hideAll();
         quizScreen.classList.remove('hidden');
-startCamera();
-        monitorFace();
-
-if (!navigator.mediaDevices) {
-  alert("Camera not supported on this device.");
-  return;
-}
 
         quizForm.innerHTML = '';
 
@@ -934,10 +885,7 @@ ${shuffled
       }
 
       function gradeTest() {
-        clearInterval(faceInterval);
-
         clearInterval(timerInterval);
-stopCamera();
 
         let score = 0;
 
@@ -1019,7 +967,7 @@ text-align:center;
 box-shadow:0 10px 40px rgba(0,0,0,0.2);
 ">
 
-<h2>🎓 SkyElite Assessment Portal</h2>
+<h2>🎓 SAKYI'S ELITE CBT</h2>
 <hr><br>
 
 <p><b>Student:</b> ${currentStudent.name}</p>
