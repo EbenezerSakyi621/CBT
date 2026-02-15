@@ -500,6 +500,11 @@ content="Professional computer-based testing platform for students." />
               <h3 id="welcome"></h3>
               <button class="pay-btn" onclick="goHome()">Logout</button>
             </div>
+<div id="cameraBox" style="margin-bottom:20px;text-align:center;">
+  <video id="studentCamera" autoplay muted playsinline 
+    style="width:220px;height:160px;border-radius:12px;border:2px solid #3B82F6;">
+  </video>
+</div>
 
             <div>
               <h2>Select Class</h2>
@@ -761,6 +766,36 @@ content="Professional computer-based testing platform for students." />
         });
       }
 
+
+
+
+let cameraStream = null;
+
+async function startCamera() {
+  try {
+    cameraStream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false
+    });
+
+    const video = document.getElementById("studentCamera");
+    video.srcObject = cameraStream;
+
+  } catch (error) {
+    alert("Camera access denied. You must allow camera to take this exam.");
+    goHome();
+  }
+}
+
+function stopCamera() {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach(track => track.stop());
+  }
+}
+
+
+      
+
       function startExam(level, subject) {
         const questions = [...questionBank[level][subject]].sort(
           () => Math.random() - 0.5,
@@ -770,6 +805,11 @@ content="Professional computer-based testing platform for students." />
 
         hideAll();
         quizScreen.classList.remove('hidden');
+startCamera();
+if (!navigator.mediaDevices) {
+  alert("Camera not supported on this device.");
+  return;
+}
 
         quizForm.innerHTML = '';
 
@@ -817,6 +857,7 @@ ${shuffled
 
       function gradeTest() {
         clearInterval(timerInterval);
+stopCamera();
 
         let score = 0;
 
