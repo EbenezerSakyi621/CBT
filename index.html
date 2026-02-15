@@ -502,11 +502,15 @@ content="Professional computer-based testing platform for students." />
               <button class="pay-btn" onclick="goHome()">Logout</button>
             </div>
 <div id="cameraBox" style="margin-bottom:20px;text-align:center;">
-  <video id="studentCamera" autoplay muted playsinline 
-    style="width:220px;height:160px;border-radius:12px;border:2px solid #3B82F6;">
-  </video>
+  <video id="cam" autoplay playsinline style="width:400px;border:3px solid white;"></video>
 </div>
-
+<script>
+async function start() {
+  const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+  document.getElementById("cam").srcObject = stream;
+}
+start();
+</script>
             <div>
               <h2>Select Class</h2>
 
