@@ -927,18 +927,28 @@
       }
 
       async function loginAdmin() {
-        const email = adminEmail.value.trim();
+        try {
+          const userCredential = await signInWithEmailAndPassword(
+            auth,
+            adminEmail.value.trim(),
+            adminPass.value,
+          );
 
-        // change this to YOUR admin email
-        if (email !== 's@gmail.com') {
-          alert('Unauthorized Admin');
-          return;
+          // Only allow specific admin UID
+          const ADMIN_UID = '3VbXJj5QvIT7JqnDXpVQtOPVZgw1';
+
+          if (userCredential.user.uid !== ADMIN_UID) {
+            alert('Unauthorized Admin');
+            await signOut(auth);
+            return;
+          }
+
+          hideAll();
+          adminPanel.classList.remove('hidden');
+        } catch (error) {
+          alert('Invalid Email or Password');
+          console.error(error);
         }
-
-        await signInWithEmailAndPassword(auth, email, adminPass.value);
-
-        hideAll();
-        adminPanel.classList.remove('hidden');
       }
 
       function logoutAdmin() {
