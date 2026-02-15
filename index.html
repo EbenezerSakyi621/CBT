@@ -526,48 +526,8 @@ content="Professional computer-based testing platform for students." />
       <video id="studentCamera" autoplay muted playsinline></video>
     </div>
 
- <script>
-      let cameraStream = null;
 
-      async function startCamera() {
-        try {
-          const video = document.getElementById('studentCamera');
 
-          cameraStream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: false,
-          });
-
-          video.srcObject = cameraStream;
-          await video.play();
-        } catch (err) {
-          alert('Camera permission is required to take this exam.');
-        }
-      }
-
-      function stopCamera() {
-        if (cameraStream) {
-          cameraStream.getTracks().forEach((track) => track.stop());
-          cameraStream = null;
-        }
-      }
-
-      async function startExam() {
-        document.getElementById('homeScreen').classList.add('hidden');
-        document.getElementById('quizScreen').classList.remove('hidden');
-        document.getElementById('cameraContainer').classList.remove('hidden');
-
-        await startCamera();
-      }
-
-      function submitExam() {
-        stopCamera();
-        document.getElementById('cameraContainer').classList.add('hidden');
-
-        alert('Exam submitted successfully!');
-        location.reload();
-      }
-    </script>
 
             
             <div>
@@ -663,6 +623,38 @@ content="Professional computer-based testing platform for students." />
       let currentStudent = null;
       let currentQuestions = [];
       let timerInterval;
+// ================= CAMERA SYSTEM =================
+let cameraStream = null;
+
+async function startCamera() {
+  try {
+    const video = document.getElementById('studentCamera');
+
+    cameraStream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false,
+    });
+
+    video.srcObject = cameraStream;
+    await video.play();
+
+    document.getElementById('cameraContainer').classList.remove('hidden');
+
+  } catch (err) {
+    alert('Camera permission is required to take this exam.');
+    goHome();
+  }
+}
+
+function stopCamera() {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach((track) => track.stop());
+    cameraStream = null;
+  }
+
+  document.getElementById('cameraContainer').classList.add('hidden');
+}
+// =================================================
 
       // UI helpers
       function hideAll() {
@@ -830,7 +822,7 @@ content="Professional computer-based testing platform for students." />
         });
       }
 
-      function startExam(level, subject) {
+    async function startExam(level, subject) {
         const questions = [...questionBank[level][subject]].sort(
           () => Math.random() - 0.5,
         );
@@ -839,7 +831,7 @@ content="Professional computer-based testing platform for students." />
 
         hideAll();
         quizScreen.classList.remove('hidden');
-
+        await startCamera();
         quizForm.innerHTML = '';
 
         questions.forEach((q, i) => {
@@ -885,6 +877,8 @@ ${shuffled
       }
 
       function gradeTest() {
+        
+        stopCamera();
         clearInterval(timerInterval);
 
         let score = 0;
