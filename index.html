@@ -549,14 +549,18 @@ content="Professional computer-based testing platform for students." />
     🎥 Live Monitoring
   </p>
 
-  <video 
-    id="studentCamera"
-    autoplay 
-    muted 
-    playsinline
-    style="width:100%;border-radius:8px;">
-  </video>
-
+  <video
+  id="studentCamera"
+  autoplay
+  muted
+  playsinline
+  style="
+    width:300px;
+    height:220px;
+    background:red;
+    border:3px solid yellow;
+  ">
+</video>
 </div>
 
           <div class="timer" id="timer"></div>
@@ -809,23 +813,20 @@ let cameraStream = null;
 
 async function startCamera() {
   try {
-    cameraStream = await navigator.mediaDevices.getUserMedia({
+    const video = document.getElementById("studentCamera");
+
+    const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: false
     });
 
-    const video = document.getElementById("studentCamera");
-    video.srcObject = cameraStream;
+    video.srcObject = stream;
+
+    await video.play();   // 🔥 VERY IMPORTANT
 
   } catch (error) {
-    alert("Camera permission is required to take this exam.");
-    goHome();
-  }
-}
-
-function stopCamera() {
-  if (cameraStream) {
-    cameraStream.getTracks().forEach(track => track.stop());
+    console.error(error);
+    alert("Camera access failed.");
   }
 }
 
