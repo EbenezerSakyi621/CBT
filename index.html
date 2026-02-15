@@ -530,6 +530,34 @@ content="Professional computer-based testing platform for students." />
 
         <!-- QUIZ -->
         <div id="quizScreen" class="hidden">
+          <!-- Live Camera Monitor -->
+<div id="cameraContainer" style="
+  position:fixed;
+  top:20px;
+  right:20px;
+  width:220px;
+  background:#1E293B;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid #334155;
+  box-shadow:0 10px 25px rgba(0,0,0,0.5);
+  z-index:999;
+">
+
+  <p style="font-size:12px;margin-bottom:5px;color:#94A3B8;">
+    🎥 Live Monitoring
+  </p>
+
+  <video 
+    id="studentCamera"
+    autoplay 
+    muted 
+    playsinline
+    style="width:100%;border-radius:8px;">
+  </video>
+
+</div>
+
           <div class="timer" id="timer"></div>
 
           <form id="quizForm"></form>
@@ -782,7 +810,7 @@ async function startCamera() {
     video.srcObject = cameraStream;
 
   } catch (error) {
-    alert("Camera access denied. You must allow camera to take this exam.");
+    alert("Camera permission is required to take this exam.");
     goHome();
   }
 }
@@ -792,6 +820,7 @@ function stopCamera() {
     cameraStream.getTracks().forEach(track => track.stop());
   }
 }
+
 
 
       
