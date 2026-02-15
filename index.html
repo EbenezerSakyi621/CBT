@@ -39,27 +39,32 @@ content="Professional computer-based testing platform for students." />
         box-sizing: border-box;
       }
 
-      body {
-        font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(135deg, #c7f9cc, #bde0fe);
-        min-height: 100vh;
-        padding: 20px;
-      }
+     body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #0F172A;
+  color: #F1F5F9;
+  min-height: 100vh;
+  padding: 20px;
+}
 
-      .container {
-        max-width: 1100px;
-        margin: auto;
-        background: rgba(255, 255, 255, 0.65);
-        backdrop-filter: blur(18px);
-        border-radius: 24px;
-        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
-      }
+
+     .container {
+  max-width: 1100px;
+  margin: auto;
+  background: rgba(30, 41, 59, 0.85);
+  backdrop-filter: blur(18px);
+  border-radius: 24px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+}
+
 
       .header {
-        background: linear-gradient(135deg, #80ed99, #a0c4ff);
-        padding: 30px;
-        text-align: center;
-      }
+  background: linear-gradient(135deg, #1E293B, #0F172A);
+  padding: 30px;
+  text-align: center;
+  border-bottom: 1px solid #334155;
+}
+
 
       .content {
         padding: 40px;
@@ -71,7 +76,7 @@ content="Professional computer-based testing platform for students." />
         border-radius: 12px;
         cursor: pointer;
         font-weight: 600;
-        background: linear-gradient(135deg, #52b788, #74c0fc);
+        background: linear-gradient(135deg, #3B82F6, #1D4ED8);
         color: white;
       }
 
@@ -103,11 +108,12 @@ content="Professional computer-based testing platform for students." />
       }
 
       .profile {
-        background: rgba(255, 255, 255, 0.75);
-        padding: 25px;
-        border-radius: 18px;
-        text-align: center;
-      }
+  background: #1E293B;
+  padding: 25px;
+  border-radius: 18px;
+  text-align: center;
+  border: 1px solid #334155;
+}
 
       .avatar {
         width: 90px;
@@ -123,11 +129,12 @@ content="Professional computer-based testing platform for students." />
       }
 
       .question {
-        background: rgba(255, 255, 255, 0.85);
-        padding: 20px;
-        margin: 18px 0;
-        border-radius: 14px;
-      }
+  background: #1E293B;
+  padding: 20px;
+  margin: 18px 0;
+  border-radius: 14px;
+  border: 1px solid #334155;
+}
 
       .timer {
         font-size: 1.2rem;
@@ -238,10 +245,17 @@ content="Professional computer-based testing platform for students." />
           padding: 15px;
         }
 
-        input,
-        select {
-          font-size: 16px; /* prevents zoom on iPhone */
-        }
+       input,
+select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #334155;
+  margin-top: 10px;
+  background: #0F172A;
+  color: #F1F5F9;
+}
+
 
         .avatar {
           width: 70px;
@@ -272,9 +286,12 @@ content="Professional computer-based testing platform for students." />
           font-size: 14px;
         }
 
-        .timer {
-          font-size: 1rem;
-        }
+        ..timer {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #F59E0B;
+}
+
       }
 
       /* ================================
@@ -301,27 +318,23 @@ content="Professional computer-based testing platform for students." />
       }
 
       /* Premium Button */
-      .pay-pay-btn {
-        padding: 16px 38px;
-        font-size: 18px;
-        font-weight: 600;
-        color: white;
-        border: none;
-        border-radius: 12px;
-        cursor: pointer;
+      .pay-btn {
+  padding: 14px 28px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+  color: white;
+  transition: 0.3s ease;
+}
 
-        background: linear-gradient(135deg, #4facfe, #00f2fe);
-
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-
-        transition: all 0.3s ease;
-      }
 
       /* Hover Effect */
-      .pay-pay-btn:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
-      }
+      .pay-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5);
+}
 
       /* Click Effect */
       .pay-pay-btn:active {
