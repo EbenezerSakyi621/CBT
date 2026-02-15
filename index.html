@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -357,6 +356,61 @@
       .pay-pay-btn:hover::after {
         background: #2563eb;
       }
+      @media (max-width: 768px) {
+        #cameraBox {
+          width: 140px !important;
+          height: 110px !important;
+          top: 10px !important;
+          right: 10px !important;
+        }
+      }
+
+      #quizScreen {
+        position: relative;
+      }
+
+      #cameraWrapper {
+        position: sticky;
+        top: 0;
+        z-index: 999;
+
+        padding: 10px 0;
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      #cameraBox {
+        width: 220px;
+        height: 160px;
+        background: #000;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 3px solid #3b82f6;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      #cameraFeed {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .cameraLabel {
+        position: absolute;
+        top: 5px;
+        left: 1000px;
+        background: rgba(217, 4, 41, 0.9);
+        color: white;
+        font-size: 12px;
+        padding: 4px 8px;
+        border-radius: 8px;
+        font-weight: bold;
+      }
+      button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
     </style>
     <script type="application/ld+json">
       {
@@ -375,6 +429,10 @@
   </head>
 
   <body>
+    <!-- CAMERA MONITOR -->
+
+    <!-- CAMERA MONITOR -->
+
     <div class="watermark"></div>
     <div class="container">
       <div class="header">
@@ -467,8 +525,15 @@
           <button class="pay-btn" onclick="logoutAdmin()">Logout</button>
 
           <h3 style="margin-top: 20px">Add Student</h3>
-          <input id="newStudentId" />
-          <input id="newStudentName" />
+          <input id="newStudentId" placeholder="Student ID" />
+          <input id="newStudentName" placeholder="Student Name" />
+
+          <select id="newStudentClass">
+            <option value="jhs1">JHS1</option>
+            <option value="jhs2">JHS2</option>
+            <option value="jhs3">JHS3</option>
+          </select>
+
           <button class="pay-btn" onclick="addStudent()">Save Student</button>
 
           <h3 style="margin-top: 20px">Upload Question</h3>
@@ -490,8 +555,35 @@
           <button class="pay-btn" onclick="addQuestion()">Upload</button>
 
           <h3 style="margin-top: 25px">Manage Questions</h3>
+          <div class="selection" style="margin-bottom: 15px">
+            <button class="pay-btn" onclick="loadAdminQuestionsByClass('jhs1')">
+              JHS 1
+            </button>
+
+            <button class="pay-btn" onclick="loadAdminQuestionsByClass('jhs2')">
+              JHS 2
+            </button>
+
+            <button class="pay-btn" onclick="loadAdminQuestionsByClass('jhs3')">
+              JHS 3
+            </button>
+          </div>
+
+          <h3 style="margin-top: 25px">Exam Snapshots</h3>
+          <button class="pay-btn" onclick="loadSnapshots()">
+            View Snapshots
+          </button>
+          <button
+            class="pay-btn"
+            onclick="deleteAllSnapshots()"
+            style="background: #b00020; margin-bottom: 15px"
+          >
+            🗑 Delete ALL Snapshots
+          </button>
           <div id="questionList"></div>
         </div>
+
+        <div id="snapshotGallery" style="margin-top: 20px"></div>
 
         <!-- DASHBOARD -->
         <div id="dashboard" class="hidden">
@@ -506,15 +598,29 @@
               <h2>Select Class</h2>
 
               <div class="selection">
-                <button class="pay-btn" onclick="selectClass('jhs1')">
-                  JHS 1
-                </button>
-                <button class="pay-btn" onclick="selectClass('jhs2')">
-                  JHS 2
-                </button>
-                <button class="pay-btn" onclick="selectClass('jhs3')">
-                  JHS 3
-                </button>
+                <div class="selection">
+                  <button
+                    id="btn-jhs1"
+                    class="pay-btn"
+                    onclick="selectClass('jhs1')"
+                  >
+                    JHS 1
+                  </button>
+                  <button
+                    id="btn-jhs2"
+                    class="pay-btn"
+                    onclick="selectClass('jhs2')"
+                  >
+                    JHS 2
+                  </button>
+                  <button
+                    id="btn-jhs3"
+                    class="pay-btn"
+                    onclick="selectClass('jhs3')"
+                  >
+                    JHS 3
+                  </button>
+                </div>
               </div>
 
               <div id="subjects" class="selection" style="margin-top: 30px">
@@ -526,6 +632,21 @@
 
         <!-- QUIZ -->
         <div id="quizScreen" class="hidden">
+          <!-- CAMERA WRAPPER -->
+          <div id="cameraWrapper">
+            <canvas
+              id="snapshotCanvas"
+              width="320"
+              height="240"
+              style="display: none"
+            ></canvas>
+
+            <div id="cameraBox">
+              <video id="cameraFeed" autoplay muted playsinline></video>
+              <div class="cameraLabel">🔴 LIVE</div>
+            </div>
+          </div>
+
           <div class="timer" id="timer"></div>
 
           <form id="quizForm"></form>
@@ -590,6 +711,8 @@
       setPersistence(auth, browserSessionPersistence);
 
       // STATE
+      let cameraStream = null;
+      let snapshotInterval = null;
       let questionBank = { jhs1: {}, jhs2: {}, jhs3: {} };
       let questionsLoaded = false;
       let currentStudent = null;
@@ -630,7 +753,139 @@
         questionsLoaded = true;
       }
 
+      async function loadSnapshots() {
+        hideAll();
+        adminPanel.classList.remove('hidden');
+
+        const gallery = document.getElementById('snapshotGallery');
+        gallery.innerHTML = 'Loading snapshots...';
+
+        try {
+          const snap = await getDocs(collection(db, 'snapshots'));
+          gallery.innerHTML = '';
+
+          snap.forEach((docSnap) => {
+            const data = docSnap.data();
+
+            gallery.innerHTML += `
+        <div id="snap-${docSnap.id}" style="
+          border:1px solid #ddd;
+          padding:15px;
+          margin-bottom:15px;
+          border-radius:12px;
+          background:white;
+        ">
+          <p><b>Student:</b> ${data.studentName}</p>
+          <p><b>ID:</b> ${data.studentId}</p>
+          <p><b>Time:</b> ${
+            data.timestamp?.seconds
+              ? new Date(data.timestamp.seconds * 1000).toLocaleString()
+              : 'Unknown'
+          }</p>
+
+          <img src="${data.image}" 
+               style="width:200px;border-radius:10px;margin-top:10px;"><br><br>
+
+          <button class="pay-btn" 
+                  onclick="deleteSnapshot('${docSnap.id}')"
+                  style="background:#d90429;">
+            Delete Snapshot
+          </button>
+        </div>
+      `;
+          });
+
+          if (!gallery.innerHTML) {
+            gallery.innerHTML = '<b>No snapshots found.</b>';
+          }
+        } catch (err) {
+          gallery.innerHTML = '<b>Error loading snapshots.</b>';
+          console.error(err);
+        }
+      }
+
+      async function deleteSnapshot(id) {
+        const confirmDelete = confirm(
+          'Are you sure you want to delete this snapshot?',
+        );
+        if (!confirmDelete) return;
+
+        try {
+          await deleteDoc(doc(db, 'snapshots', id));
+
+          // Remove from UI instantly
+          const element = document.getElementById(`snap-${id}`);
+          if (element) element.remove();
+
+          alert('Snapshot deleted successfully.');
+        } catch (err) {
+          console.error(err);
+          alert('Error deleting snapshot.');
+        }
+      }
+
+      async function deleteAllSnapshots() {
+        const confirmDelete = confirm(
+          '⚠ WARNING!\n\nThis will permanently delete ALL snapshots.\n\nAre you sure?',
+        );
+
+        if (!confirmDelete) return;
+
+        try {
+          const snap = await getDocs(collection(db, 'snapshots'));
+
+          const deletePromises = [];
+
+          snap.forEach((docSnap) => {
+            deletePromises.push(deleteDoc(doc(db, 'snapshots', docSnap.id)));
+          });
+
+          await Promise.all(deletePromises);
+
+          // Clear gallery instantly
+          document.getElementById('snapshotGallery').innerHTML =
+            '<b>All snapshots deleted.</b>';
+
+          alert('All snapshots successfully deleted.');
+        } catch (err) {
+          console.error(err);
+          alert('Error deleting snapshots.');
+        }
+      }
+
       loadQuestions();
+      function startSnapshots() {
+        const video = document.getElementById('cameraFeed');
+        const canvas = document.getElementById('snapshotCanvas');
+        const ctx = canvas.getContext('2d');
+
+        snapshotInterval = setInterval(async () => {
+          if (!video.srcObject || !currentStudent) return;
+
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          const imageData = canvas.toDataURL('image/jpeg', 0.6);
+
+          try {
+            await addDoc(collection(db, 'snapshots'), {
+              studentName: currentStudent.name,
+              studentId: studentId.value.trim(),
+              image: imageData,
+              timestamp: new Date(),
+            });
+
+            console.log('Snapshot saved');
+          } catch (err) {
+            console.error('Snapshot error:', err);
+          }
+        }, 10000); // every 10 seconds
+      }
+
+      function stopSnapshots() {
+        if (snapshotInterval) {
+          clearInterval(snapshotInterval);
+          snapshotInterval = null;
+        }
+      }
 
       // TIMER CALCULATOR
       function calculateExamTime(subject, count) {
@@ -665,8 +920,6 @@
 
         hideAll();
         adminPanel.classList.remove('hidden');
-
-        loadAdminQuestions();
       }
 
       function logoutAdmin() {
@@ -675,10 +928,12 @@
       }
 
       async function addStudent() {
-        await setDoc(doc(db, 'students', newStudentId.value), {
-          name: newStudentName.value,
+        await setDoc(doc(db, 'students', newStudentId.value.trim()), {
+          name: newStudentName.value.trim(),
+          class: newStudentClass.value,
         });
-        alert('Student added');
+
+        alert('Student added successfully.');
       }
 
       async function addQuestion() {
@@ -696,35 +951,65 @@
         loadAdminQuestions();
       }
 
-      async function loadAdminQuestions() {
+      async function loadAdminQuestionsByClass(selectedClass) {
         const list = document.getElementById('questionList');
         list.innerHTML = 'Loading...';
 
         const snap = await getDocs(collection(db, 'questions'));
-
         list.innerHTML = '';
+
+        let found = false;
 
         snap.forEach((docSnap) => {
           const q = docSnap.data();
 
-          list.innerHTML += `
-<div style="border:1px solid #ddd;padding:10px;margin:10px;border-radius:10px">
-<b>${q.q}</b>
-<br><br>
-<button onclick="deleteQuestion('${docSnap.id}')" class="pay-btn">Delete</button>
-</div>`;
-        });
-      }
+          if (q.level === selectedClass) {
+            found = true;
 
-      window.deleteQuestion = async (id) => {
-        await deleteDoc(doc(db, 'questions', id));
-        loadAdminQuestions();
-        loadQuestions();
-      };
+            list.innerHTML += `
+        <div style="
+          border:1px solid #ddd;
+          padding:15px;
+          margin:15px 0;
+          border-radius:12px;
+          background:white;
+        ">
+
+          <p style="color:#3b82f6;font-weight:bold;">
+            Class: ${q.level.toUpperCase()}
+          </p>
+
+          <p style="color:#16a34a;font-weight:bold;">
+            Subject: ${q.subject.toUpperCase()}
+          </p>
+
+          <hr style="margin:10px 0;">
+
+          <p><b>Question:</b> ${q.q}</p>
+
+          <br>
+
+          <button 
+            onclick="deleteQuestion('${docSnap.id}')" 
+            class="pay-btn"
+            style="background:#d90429;">
+            🗑 Delete Question
+          </button>
+
+        </div>
+      `;
+          }
+        });
+
+        if (!found) {
+          list.innerHTML = `<b>No questions found for ${selectedClass.toUpperCase()}.</b>`;
+        }
+      }
 
       // STUDENT
       async function verifyStudent() {
-        const snap = await getDoc(doc(db, 'students', studentId.value.trim()));
+        const id = studentId.value.trim();
+        const snap = await getDoc(doc(db, 'students', id));
 
         if (!snap.exists()) {
           alert('Student not found');
@@ -738,10 +1023,29 @@
 
         welcome.innerText = `Welcome, ${currentStudent.name}`;
         avatar.innerText = currentStudent.name.charAt(0).toUpperCase();
+
+        const studentClass = currentStudent.class;
+
+        // 🔥 Disable all class buttons first
+        document.getElementById('btn-jhs1').disabled = true;
+        document.getElementById('btn-jhs2').disabled = true;
+        document.getElementById('btn-jhs3').disabled = true;
+
+        // 🔥 Enable only student's class
+        document.getElementById('btn-' + studentClass).disabled = false;
+
+        // 🔥 Auto select their class
+        selectClass(studentClass);
       }
 
       // FIXED SUBJECT LOADER
       function selectClass(level) {
+        // 🔒 Prevent accessing other classes
+        if (!currentStudent || level !== currentStudent.class) {
+          alert('You are not allowed to access this class.');
+          return;
+        }
+
         if (!questionsLoaded) {
           subjects.innerHTML = 'Preparing your exam... Please wait.';
           return;
@@ -750,7 +1054,7 @@
         const subjectsDiv = document.getElementById('subjects');
         subjectsDiv.innerHTML = '';
 
-        const subs = Object.keys(questionBank[level]);
+        const subs = Object.keys(questionBank[level] || {});
 
         if (subs.length === 0) {
           subjectsDiv.innerHTML = '<b>No subjects uploaded yet.</b>';
@@ -758,7 +1062,9 @@
         }
 
         subs.forEach((sub) => {
-          subjectsDiv.innerHTML += `<button class="pay-btn" onclick="startExam('${level}','${sub}')">${sub}</button>`;
+          subjectsDiv.innerHTML += `<button class="pay-btn" onclick="startExam('${level}','${sub}')">
+        ${sub}
+      </button>`;
         });
       }
 
@@ -771,7 +1077,8 @@
 
         hideAll();
         quizScreen.classList.remove('hidden');
-
+        startCamera();
+        startSnapshots();
         quizForm.innerHTML = '';
 
         questions.forEach((q, i) => {
@@ -815,8 +1122,37 @@ ${shuffled
           }
         }, 1000);
       }
+      // START CAMERA
+      async function startCamera() {
+        try {
+          cameraStream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: false,
+          });
+
+          const video = document.getElementById('cameraFeed');
+          video.srcObject = cameraStream;
+
+          document.getElementById('cameraBox').style.display = 'block';
+        } catch (err) {
+          alert('Camera access is required to take this exam.');
+          goHome();
+        }
+      }
+
+      // STOP CAMERA
+      function stopCamera() {
+        if (cameraStream) {
+          cameraStream.getTracks().forEach((track) => track.stop());
+          cameraStream = null;
+        }
+
+        document.getElementById('cameraBox').style.display = 'none';
+      }
 
       function gradeTest() {
+        stopSnapshots();
+        stopCamera();
         clearInterval(timerInterval);
 
         let score = 0;
@@ -885,6 +1221,10 @@ ${shuffled
       window.startExam = startExam;
       window.gradeTest = gradeTest;
       window.goHome = goHome;
+      window.loadSnapshots = loadSnapshots;
+      window.deleteSnapshot = deleteSnapshot;
+      window.deleteAllSnapshots = deleteAllSnapshots;
+      window.loadAdminQuestionsByClass = loadAdminQuestionsByClass;
       function generateSlip(score) {
         const percent = Math.round((score / currentQuestions.length) * 100);
 
@@ -930,43 +1270,57 @@ ${percent >= 50 ? 'PASS' : 'FAIL'}
         navigator.serviceWorker.register('/service-worker.js');
       }
     </script>
-  <!-- Code injected by live-server -->
-<script>
-	// <![CDATA[  <-- For SVG support
-	if ('WebSocket' in window) {
-		(function () {
-			function refreshCSS() {
-				var sheets = [].slice.call(document.getElementsByTagName("link"));
-				var head = document.getElementsByTagName("head")[0];
-				for (var i = 0; i < sheets.length; ++i) {
-					var elem = sheets[i];
-					var parent = elem.parentElement || head;
-					parent.removeChild(elem);
-					var rel = elem.rel;
-					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
-						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
-						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
-					}
-					parent.appendChild(elem);
-				}
-			}
-			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-			var address = protocol + window.location.host + window.location.pathname + '/ws';
-			var socket = new WebSocket(address);
-			socket.onmessage = function (msg) {
-				if (msg.data == 'reload') window.location.reload();
-				else if (msg.data == 'refreshcss') refreshCSS();
-			};
-			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
-				console.log('Live reload enabled.');
-				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
-			}
-		})();
-	}
-	else {
-		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
-	}
-	// ]]>
-</script>
-</body>
+    <!-- Code injected by live-server -->
+    <script>
+      // <![CDATA[  <-- For SVG support
+      if ('WebSocket' in window) {
+        (function () {
+          function refreshCSS() {
+            var sheets = [].slice.call(document.getElementsByTagName('link'));
+            var head = document.getElementsByTagName('head')[0];
+            for (var i = 0; i < sheets.length; ++i) {
+              var elem = sheets[i];
+              var parent = elem.parentElement || head;
+              parent.removeChild(elem);
+              var rel = elem.rel;
+              if (
+                (elem.href && typeof rel != 'string') ||
+                rel.length == 0 ||
+                rel.toLowerCase() == 'stylesheet'
+              ) {
+                var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+                elem.href =
+                  url +
+                  (url.indexOf('?') >= 0 ? '&' : '?') +
+                  '_cacheOverride=' +
+                  new Date().valueOf();
+              }
+              parent.appendChild(elem);
+            }
+          }
+          var protocol =
+            window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+          var address =
+            protocol + window.location.host + window.location.pathname + '/ws';
+          var socket = new WebSocket(address);
+          socket.onmessage = function (msg) {
+            if (msg.data == 'reload') window.location.reload();
+            else if (msg.data == 'refreshcss') refreshCSS();
+          };
+          if (
+            sessionStorage &&
+            !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')
+          ) {
+            console.log('Live reload enabled.');
+            sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+          }
+        })();
+      } else {
+        console.error(
+          'Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.',
+        );
+      }
+      // ]]>
+    </script>
+  </body>
 </html>
