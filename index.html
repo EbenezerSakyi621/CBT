@@ -1,11 +1,8 @@
-
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="manifest" href="manifest.json" />
-    <meta name="theme-color" content="#1a73e8" />
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#1a73e8" />
     <title>SKY ELITE ASSESSMENT PORTAL | School Examination Platform</title>
@@ -400,7 +397,7 @@
       .cameraLabel {
         position: absolute;
         top: 5px;
-        left: 1000px;
+        left: 5px;
         background: rgba(217, 4, 41, 0.9);
         color: white;
         font-size: 12px;
@@ -408,6 +405,7 @@
         border-radius: 8px;
         font-weight: bold;
       }
+
       button:disabled {
         background-color: #ccc;
         cursor: not-allowed;
@@ -420,7 +418,7 @@
         "@type": "School",
         "name": "SKY ELITE ASSESSMENT PORTAL",
         "description": "Professional Computer-Based Testing platform for Junior High School students.",
-        "url": "https://skyeliteassessmentportal.vercel.app/,
+        "url": "https://skyeliteassessmentportal.vercel.app/",
         "logo": "https://skyeliteassessmentportal.vercel.app/watermark.png",
         "address": {
           "@type": "PostalAddress",
@@ -895,10 +893,10 @@
 
         let seconds = 30;
 
-        if (subject === 'ENGLISH') seconds = 20;
-        if (subject === 'MATHEMATICS' || subject === 'MATHEMATICS')
+        if (subject === 'english') seconds = 20;
+        if (subject === 'mathematics' || subject === 'mathematics')
           seconds = 35;
-        if (subject === 'SCIENCE') seconds = 35;
+        if (subject === 'science') seconds = 35;
 
         return seconds * count;
       }
@@ -1029,64 +1027,46 @@
 
       // STUDENT
       async function verifyStudent() {
-        const id = studentId.value.trim();
-        const snap = await getDoc(doc(db, 'students', id));
+        try {
+          const id = document.getElementById('studentId').value.trim();
 
-        if (!snap.exists()) {
-          alert('Student not found');
-          return;
+          if (!id) {
+            alert('Please enter Student ID');
+            return;
+          }
+
+          const snap = await getDoc(doc(db, 'students', id));
+
+          if (!snap.exists()) {
+            alert('Student not found');
+            return;
+          }
+
+          currentStudent = snap.data();
+
+          hideAll();
+          document.getElementById('dashboard').classList.remove('hidden');
+
+          document.getElementById('welcome').innerText =
+            `Welcome, ${currentStudent.name}`;
+
+          document.getElementById('avatar').innerText = currentStudent.name
+            .charAt(0)
+            .toUpperCase();
+
+          const studentClass = currentStudent.class;
+
+          document.getElementById('btn-jhs1').disabled = true;
+          document.getElementById('btn-jhs2').disabled = true;
+          document.getElementById('btn-jhs3').disabled = true;
+
+          document.getElementById('btn-' + studentClass).disabled = false;
+
+          selectClass(studentClass);
+        } catch (error) {
+          console.error('Verify Error:', error);
+          alert('Error verifying student. Check console.');
         }
-
-        currentStudent = snap.data();
-
-        hideAll();
-        dashboard.classList.remove('hidden');
-
-        welcome.innerText = `Welcome, ${currentStudent.name}`;
-        avatar.innerText = currentStudent.name.charAt(0).toUpperCase();
-
-        const studentClass = currentStudent.class;
-
-        // 🔥 Disable all class buttons first
-        document.getElementById('btn-jhs1').disabled = true;
-        document.getElementById('btn-jhs2').disabled = true;
-        document.getElementById('btn-jhs3').disabled = true;
-
-        // 🔥 Enable only student's class
-        document.getElementById('btn-' + studentClass).disabled = false;
-
-        // 🔥 Auto select their class
-        selectClass(studentClass);
-      }
-
-      // FIXED SUBJECT LOADER
-      function selectClass(level) {
-        // 🔒 Prevent accessing other classes
-        if (!currentStudent || level !== currentStudent.class) {
-          alert('You are not allowed to access this class.');
-          return;
-        }
-
-        if (!questionsLoaded) {
-          subjects.innerHTML = 'Preparing your exam... Please wait.';
-          return;
-        }
-
-        const subjectsDiv = document.getElementById('subjects');
-        subjectsDiv.innerHTML = '';
-
-        const subs = Object.keys(questionBank[level] || {});
-
-        if (subs.length === 0) {
-          subjectsDiv.innerHTML = '<b>No subjects uploaded yet.</b>';
-          return;
-        }
-
-        subs.forEach((sub) => {
-          subjectsDiv.innerHTML += `<button class="pay-btn" onclick="startExam('${level}','${sub}')">
-        ${sub}
-      </button>`;
-        });
       }
 
       function startExam(level, subject) {
@@ -1231,6 +1211,37 @@ ${shuffled
       });
       // ADD THIS LINE: saves the subject for the result slip
 
+      function selectClass(level) {
+        if (!currentStudent || level !== currentStudent.class) {
+          alert('You are not allowed to access this class.');
+          return;
+        }
+
+        if (!questionsLoaded) {
+          document.getElementById('subjects').innerHTML =
+            'Preparing your exam... Please wait.';
+          return;
+        }
+
+        const subjectsDiv = document.getElementById('subjects');
+        subjectsDiv.innerHTML = '';
+
+        const subs = Object.keys(questionBank[level] || {});
+
+        if (subs.length === 0) {
+          subjectsDiv.innerHTML = '<b>No subjects uploaded yet.</b>';
+          return;
+        }
+
+        subs.forEach((sub) => {
+          subjectsDiv.innerHTML += `
+      <button class="pay-btn" onclick="startExam('${level}','${sub}')">
+        ${sub.toUpperCase()}
+      </button>
+    `;
+        });
+      }
+
       // expose
       window.verifyStudent = verifyStudent;
       window.openAdmin = openAdmin;
@@ -1288,9 +1299,6 @@ ${percent >= 50 ? 'PASS' : 'FAIL'}
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/service-worker.js');
       }
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js');
-      }
     </script>
     <!-- Code injected by live-server -->
     <script>
@@ -1344,43 +1352,57 @@ ${percent >= 50 ? 'PASS' : 'FAIL'}
       }
       // ]]>
     </script>
-  <!-- Code injected by live-server -->
-<script>
-	// <![CDATA[  <-- For SVG support
-	if ('WebSocket' in window) {
-		(function () {
-			function refreshCSS() {
-				var sheets = [].slice.call(document.getElementsByTagName("link"));
-				var head = document.getElementsByTagName("head")[0];
-				for (var i = 0; i < sheets.length; ++i) {
-					var elem = sheets[i];
-					var parent = elem.parentElement || head;
-					parent.removeChild(elem);
-					var rel = elem.rel;
-					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
-						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
-						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
-					}
-					parent.appendChild(elem);
-				}
-			}
-			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-			var address = protocol + window.location.host + window.location.pathname + '/ws';
-			var socket = new WebSocket(address);
-			socket.onmessage = function (msg) {
-				if (msg.data == 'reload') window.location.reload();
-				else if (msg.data == 'refreshcss') refreshCSS();
-			};
-			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
-				console.log('Live reload enabled.');
-				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
-			}
-		})();
-	}
-	else {
-		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
-	}
-	// ]]>
-</script>
-</body>
+    <!-- Code injected by live-server -->
+    <script>
+      // <![CDATA[  <-- For SVG support
+      if ('WebSocket' in window) {
+        (function () {
+          function refreshCSS() {
+            var sheets = [].slice.call(document.getElementsByTagName('link'));
+            var head = document.getElementsByTagName('head')[0];
+            for (var i = 0; i < sheets.length; ++i) {
+              var elem = sheets[i];
+              var parent = elem.parentElement || head;
+              parent.removeChild(elem);
+              var rel = elem.rel;
+              if (
+                (elem.href && typeof rel != 'string') ||
+                rel.length == 0 ||
+                rel.toLowerCase() == 'stylesheet'
+              ) {
+                var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+                elem.href =
+                  url +
+                  (url.indexOf('?') >= 0 ? '&' : '?') +
+                  '_cacheOverride=' +
+                  new Date().valueOf();
+              }
+              parent.appendChild(elem);
+            }
+          }
+          var protocol =
+            window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+          var address =
+            protocol + window.location.host + window.location.pathname + '/ws';
+          var socket = new WebSocket(address);
+          socket.onmessage = function (msg) {
+            if (msg.data == 'reload') window.location.reload();
+            else if (msg.data == 'refreshcss') refreshCSS();
+          };
+          if (
+            sessionStorage &&
+            !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')
+          ) {
+            console.log('Live reload enabled.');
+            sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+          }
+        })();
+      } else {
+        console.error(
+          'Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.',
+        );
+      }
+      // ]]>
+    </script>
+  </body>
 </html>
