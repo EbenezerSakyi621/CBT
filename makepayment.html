@@ -1,406 +1,203 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SKY ELITE ASSESSMENT PORTAL | PAYMENT</title>
 
-    <title>SKY ELITE ASSESSMENT PORTL|PAYMENT</title>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
 
-    <script src="https://js.paystack.co/v1/inline.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
 
-    <style>
-      body {
-        font-family: Segoe UI;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background: #eef2ff;
-      }
-.container{
-position:relative;
-}
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #3b82f6, #1e3a8a);
+      position: relative;
+      overflow-x: hidden;
+    }
 
-.container::before{
-content:"";
-position:absolute;
-inset:0;
+    /* Watermark */
+    .watermark {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: url("watermark.png") center/contain no-repeat;
+      width: 60vw;
+      height: 60vw;
+      max-width: 500px;
+      max-height: 500px;
+      opacity: 0.05;
+      pointer-events: none;
+      z-index: 0;
+    }
 
-background:url("watermark.png") center / 300px no-repeat;
-opacity:0.05;
-pointer-events:none;
-}
+    /* Main Card */
+    .container {
+      background: white;
+      width: 95%;
+      max-width: 500px;
+      padding: 50px 40px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 1;
+      animation: fadeIn 0.7s ease;
+    }
 
-      /* PAY BUTTON */
-      .pay-btn {
-        padding: 18px 40px;
-        font-size: 18px;
-        border: none;
-        border-radius: 12px;
-        background: #3B82F6;
-        color: white;
-        cursor: pointer;
-      }
+    h1 {
+      margin-bottom: 15px;
+      font-size: 1.8rem;
+      color: #1e3a8a;
+    }
 
-      .container {
-        width: min(95%, 1200px);
-        b
+    h3 {
+      margin-bottom: 35px;
+      font-weight: 500;
+      color: #444;
+    }
 
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      padding: 15px 30px;
+      border-radius: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      margin: 10px;
+      transition: 0.3s ease;
+    }
 
-        border-radius: 28px;
-        box-shadow: 0 40px 120px rgba(0, 0, 0, 0.25);
+    .pay-btn {
+      background: #3b82f6;
+      color: white;
+    }
 
-        padding: 40px;
-        color: white;
-      }
-      .header {
-        text-align: center;
-        margin-bottom: 30px;
-      }
+    .home-btn {
+      background: #e5e7eb;
+      color: #111;
+    }
 
-      .header h1 {
-        font-size: 2.4rem;
-        letter-spacing: 1px;
-      }
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
 
-      .header p {
-        opacity: 0.85;
-      }
+    /* Modal */
+    #paymentModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
 
-      /* MODAL */
-      #paymentModal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.85);
-        z-index: 99999;
+    .modal-box {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      width: 90%;
+      max-width: 450px;
+    }
 
-        /* THIS keeps it centered permanently */
-        justify-content: center;
-        align-items: center;
-      }
-      .watermark {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-image: url("watermack.png"); /* Replace with your image */
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  width: 60vw;              /* Responsive width */
-  height: 60vw;             /* Keep square ratio */
-  max-width: 500px;         /* Desktop limit */
-  max-height: 500px;
-  opacity: 0.06;            /* Light watermark */
-  pointer-events: none;
-  z-index: 0;
-}
+    .modal-box h2 {
+      color: #16a34a;
+      margin-bottom: 15px;
+    }
 
+    .close-btn {
+      background: #dc2626;
+      color: white;
+      margin-top: 20px;
+    }
 
-      /* BOX */
-      .modal-box {
-        background: white;
-        padding: 40px;
-        border-radius: 20px;
-        text-align: center;
-        width: 90%;
-        max-width: 450px;
-        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
-      }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
 
-      .close-btn {
-        margin-top: 25px;
-        padding: 14px 28px;
-        border: none;
-        border-radius: 10px;
-        background: #d90429;
-        color: white;
-        font-weight: bold;
-        cursor: pointer;
-      }
-      body {
-        font-family: 'Segoe UI', sans-serif;
-        min-height: 100vh;
-        margin: 0;
+<body>
 
-        /* Modern gradient */
-       
+  <div class="watermark"></div>
 
-        /* keeps layout centered */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+  <div class="container">
+    <h1>Welcome to SKY ELITE ASSESSMENT PORTAL</h1>
+    <h3>Proceed to make payment to gain Administrator Access</h3>
 
-      button {
-        padding: 14px 28px;
-        border: none;
-        border-radius: 14px;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 16px;
+    <button class="btn pay-btn" onclick="payWithPaystack()">
+      Make Payment
+    </button>
 
-        /* gradient */
-        
-        color: white;
+    <a href="index.html" class="btn home-btn">
+      Return To Homepage
+    </a>
+  </div>
 
-        transition: 0.35s;
-      }
-.container{
-position:relative;
-}
+  <!-- Payment Success Modal -->
+  <div id="paymentModal">
+    <div class="modal-box">
+      <h2>✅ Payment Successful</h2>
+      <p id="paymentRef" style="font-weight:bold;"></p>
 
-.container::before{
-content:"";
-position:absolute;
-inset:0;
+      <p style="margin-top:15px;">
+        Please screenshot this page or copy the reference code and send it to:
+        <br><br>
+        <a href="https://wa.me/233505807185" target="_blank">
+          WhatsApp Confirmation
+        </a>
+      </p>
 
-background:url("watermack.png") center / 300px no-repeat;
-opacity:0.05;
-pointer-events:none;
-}
-      /* hover */
-      button:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
-      }
-
-      /* click */
-      button:active {
-        transform: scale(0.96);
-      }
-      .profile,
-      .question,
-      .adminBox {
-       
-        border-radius: 20px;
-        padding: 25px;
-        backdrop-filter: blur(20px);
-      }
-      .avatar {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        font-size: 2.2rem;
-        font-weight: bold;
-
-
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        margin: auto;
-      }
-      .container {
-        animation: fadeIn 0.8s ease;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      /* =====================================
-   BASE (Mobile First) → 0px and up
-===================================== */
-
-      /* Write your normal CSS ABOVE.
-   These queries enhance it. */
-
-      /* ✅ Small Phones (iPhone SE, old Android) */
-      @media (min-width: 320px) {
-        .container {
-          padding: 15px;
-        }
-      }
-
-      /* ✅ Large Phones */
-      @media (min-width: 480px) {
-        .container {
-          padding: 20px;
-        }
-      }
-
-      /* ✅ Tablets */
-      @media (min-width: 768px) {
-        .dashboard {
-          grid-template-columns: 1fr;
-        }
-
-        .content {
-          padding: 30px;
-        }
-      }
-
-      /* ✅ Small Laptops */
-      @media (min-width: 1024px) {
-        .container {
-          max-width: 1000px;
-          margin: auto;
-        }
-
-        .dashboard {
-          grid-template-columns: 300px 1fr;
-        }
-      }
-
-      /* ✅ Desktops */
-      @media (min-width: 1280px) {
-        .container {
-          max-width: 1200px;
-        }
-      }
-
-      /* ✅ Large Screens / 2K */
-      @media (min-width: 1536px) {
-        .container {
-          max-width: 1400px;
-        }
-
-        body {
-          font-size: 18px;
-        }
-      }
-
-      /* ✅ 4K + Ultra Wide */
-      @media (min-width: 1920px) {
-        .container {
-          max-width: 1600px;
-        }
-
-        body {
-          font-size: 20px;
-        }
-      }
-      @media (max-width: 480px) {
-  .watermark {
-    width: 80vw;
-    height: 80vw;
-    opacity: 0.05;
-  }
-}
-      h1{
-        text-align: center;
-      }
-      h3{
-        text-align: center;
-      }
-.skywel{
-  color: black;
-}
-      .skypro{
-  color: black;
-}
-      .re{
-        margin-left: 20px;
-      }
-    </style>
-  </head>
-
-  <body>
-     <div class="watermark"></div>
-    <h1>Welcome to <span class="skywel"> SKY ELITE ASSESSMENT PORTAL </span>.</h1>
-    <h3><span class="skypro">Proceed To Make Payment To Gain Administrator Access</span> </h3>
-    <button class="pay-btn" onclick="payWithPaystack()">Make Payment</button>
-<a href="index.html" style="text-decoration: none" class="pay-btn" class="re">
-          Return To Homepage</a
-        >
-    <!-- ✅ PERMANENT MODAL -->
-    <div id="paymentModal">
-      <div class="modal-box">
-        <h1 style="color: #38b000">✅ Payment Successful</h1>
-
-        <p id="paymentRef" style="font-weight: bold"></p>
-
-        <p>
-          Please make a screenshot of this page or copy the reference code and
-          send it to
-          <a href="https://wa.me/233505807185" target="_blank">
-            this whatsapp number.
-          </a>
-          After confirming your payment, you will be registered as an admin and
-          can access the admin dashboard.
-        </p>
-        <p>
-          CLICK/TAP ON THE RED BUTTON BELOW IF YOU ARE DONE SENDING THE PAYMENT
-          CONFIRMATION ON WHATSAPP.
-        </p>
-        <a href="index.html" style="text-decoration: none" class="close-btn">
-          Return To Homepage</a
-        >
-      </div>
+      <a href="index.html" class="btn close-btn">
+        Return To Homepage
+      </a>
     </div>
+  </div>
 
-    <script>
-      /* PAYSTACK */
-      function payWithPaystack() {
-        let handler = PaystackPop.setup({
-          key: 'pk_live_2936dc167ad577c516073c1376b737a5c63eccad', // replace
-          email: 'customer@email.com',
+  <script>
+    function payWithPaystack() {
+      let handler = PaystackPop.setup({
+        key: 'pk_live_2936dc167ad577c516073c1376b737a5c63eccad',
+        email: 'customer@email.com',
+        amount: 2500, // 25 GHS (Paystack uses pesewas)
+        currency: 'GHS',
 
-          // IMPORTANT → Paystack uses pesewas
-          amount: 2500, // 5 GHS
+        callback: function (response) {
+          showPaymentModal(response.reference);
+        },
 
-          currency: 'GHS',
+        onClose: function () {
+          console.log('Payment window closed');
+        },
+      });
 
-          callback: function (response) {
-            /* SHOW MODAL */
-            showPaymentModal(response.reference);
+      handler.openIframe();
+    }
 
-            /* STOP ANYTHING ELSE FROM RUNNING */
-            return false;
-          },
+    function showPaymentModal(reference) {
+      document.getElementById('paymentRef').innerText =
+        'Reference: ' + reference;
 
-          onClose: function () {
-            /* Optional */
-            console.log('Payment window closed');
-          },
-        });
+      document.getElementById('paymentModal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+  </script>
 
-        handler.openIframe();
-      }
-
-      /* SHOW MODAL */
-      function showPaymentModal(reference) {
-        document.getElementById('paymentRef').innerText =
-          'Reference: ' + reference;
-
-        /* FLEX makes it stay centered */
-        document.getElementById('paymentModal').style.display = 'flex';
-
-        /* 🔥 THIS IS THE SECRET — prevents scrolling or page feel */
-        document.body.style.overflow = 'hidden';
-      }
-
-      /* CLOSE MODAL */
-      function closePaymentModal() {
-        document.getElementById('paymentModal').style.display = 'none';
-
-        /* restore scrolling */
-        document.body.style.overflow = 'auto';
-
-        /* 👉 NOW you can safely open admin page */
-        openAdmin();
-      }
-
-      /* Example admin function */
-      function openAdmin() {
-        alert('Admin can open now.');
-      }
-    </script>
-  </body>
+</body>
 </html>
