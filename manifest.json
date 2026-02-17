@@ -1,5 +1,5 @@
 {
-  "name": "SAKYI'S ELITE CBT",
+  "name": "SKY ELITE EXAMINATION PORTAL",
   "short_name": "CBT",
   "start_url": "/",
   "display": "standalone",
@@ -8,12 +8,12 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "watermack.png",
+      "src": "watermark.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "watermack.png",
+      "src": "watermark.png",
       "sizes": "512x512",
       "type": "image/png"
     }
