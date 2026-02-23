@@ -523,8 +523,25 @@
         <div id="adminPanel" class="hidden adminBox">
           <h2>Admin Panel</h2>
           <button class="pay-btn" onclick="logoutAdmin()">Logout</button>
+          <h3 style="margin-top: 20px">Bulk Upload Student</h3>
+          <hr style="margin:20px 0">
 
-          <h3 style="margin-top: 20px">Add Student</h3>
+<h3>📥 Bulk Upload Students (Excel)</h3>
+
+<button class="pay-btn" onclick="downloadStudentTemplate()">
+  ⬇ Download Student Template
+</button>
+
+<br><br>
+
+<input type="file" id="studentExcelFile" accept=".xlsx,.xls,.csv" />
+
+<button class="pay-btn" onclick="uploadStudentExcel()">
+  🚀 Upload Student Excel
+</button>
+
+<div id="studentUploadStatus" style="margin-top:15px;font-weight:bold;"></div>
+          <h3 style="margin-top: 20px">Add Student Manually</h3>
           <input id="newStudentId" placeholder="Student ID" />
           <input id="newStudentName" placeholder="Student Name" />
 
@@ -534,6 +551,9 @@
             <option value="jhs3">JHS3</option>
           </select>
 
+
+
+          
           <button class="pay-btn" onclick="addStudent()">Save Student</button>
           <h3 style="margin-top: 20px">Bulk Question Upload</h3>
           <hr style="margin:20px 0">
@@ -553,7 +573,7 @@
 </button>
 
 <div id="uploadStatus" style="margin-top:15px;font-weight:bold;"></div>
-          <h3 style="margin-top: 20px">Upload Question</h3>
+          <h3 style="margin-top: 20px">Upload Question Manually</h3>
 
           <select id="adminClass">
             <option value="jhs1">JHS1</option>
@@ -1268,6 +1288,91 @@ ${shuffled
     `;
         });
       }
+      // DOWNLOAD STUDENT TEMPLATE
+window.downloadStudentTemplate = function () {
+  const wb = XLSX.utils.book_new();
+
+  const data = [
+    ["Student ID", "Student Name", "Class (jhs1/jhs2/jhs3)"],
+    ["JHS1001", "Kwame Mensah", "jhs1"],
+    ["JHS2001", "Ama Owusu", "jhs2"]
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  XLSX.utils.book_append_sheet(wb, ws, "Students");
+
+  XLSX.writeFile(wb, "CBT_Student_Template.xlsx");
+};
+
+
+// UPLOAD STUDENT EXCEL
+window.uploadStudentExcel = async function () {
+  const fileInput = document.getElementById("studentExcelFile");
+  const status = document.getElementById("studentUploadStatus");
+
+  if (!fileInput.files.length) {
+    alert("Please select a student Excel file.");
+    return;
+  }
+
+  const file = fileInput.files[0];
+  const reader = new FileReader();
+
+  reader.onload = async function (e) {
+    const data = new Uint8Array(e.target.result);
+    const workbook = XLSX.read(data, { type: "array" });
+
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+    if (jsonData.length < 2) {
+      alert("Excel file is empty.");
+      return;
+    }
+
+    let successCount = 0;
+    let skippedCount = 0;
+
+    for (let i = 1; i < jsonData.length; i++) {
+      const row = jsonData[i];
+
+      const studentId = row[0]?.toString().trim();
+      const studentName = row[1]?.toString().trim();
+      const studentClass = row[2]?.toString().toLowerCase().trim();
+
+      if (!studentId || !studentName || !studentClass) {
+        skippedCount++;
+        continue;
+      }
+
+      if (!["jhs1", "jhs2", "jhs3"].includes(studentClass)) {
+        skippedCount++;
+        continue;
+      }
+
+      try {
+        await setDoc(doc(db, "students", studentId), {
+          name: studentName,
+          class: studentClass
+        });
+
+        successCount++;
+      } catch (err) {
+        console.error("Student upload error:", err);
+        skippedCount++;
+      }
+    }
+
+    status.innerHTML = `
+      ✅ Uploaded: ${successCount} students <br>
+      ⚠ Skipped: ${skippedCount} rows
+    `;
+  };
+
+  reader.readAsArrayBuffer(file);
+};
 // DOWNLOAD TEMPLATE
 window.downloadTemplate = function () {
   const wb = XLSX.utils.book_new();
