@@ -524,23 +524,26 @@
           <h2>Admin Panel</h2>
           <button class="pay-btn" onclick="logoutAdmin()">Logout</button>
           <h3 style="margin-top: 20px">Bulk Upload Student</h3>
-          <hr style="margin:20px 0">
+          <hr style="margin: 20px 0" />
 
-<h3>📥 Bulk Upload Students (Excel)</h3>
+          <h3>📥 Bulk Upload Students (Excel)</h3>
 
-<button class="pay-btn" onclick="downloadStudentTemplate()">
-  ⬇ Download Student Template
-</button>
+          <button class="pay-btn" onclick="downloadStudentTemplate()">
+            ⬇ Download Student Template
+          </button>
 
-<br><br>
+          <br /><br />
 
-<input type="file" id="studentExcelFile" accept=".xlsx,.xls,.csv" />
+          <input type="file" id="studentExcelFile" accept=".xlsx,.xls,.csv" />
 
-<button class="pay-btn" onclick="uploadStudentExcel()">
-  🚀 Upload Student Excel
-</button>
+          <button class="pay-btn" onclick="uploadStudentExcel()">
+            🚀 Upload Student Excel
+          </button>
 
-<div id="studentUploadStatus" style="margin-top:15px;font-weight:bold;"></div>
+          <div
+            id="studentUploadStatus"
+            style="margin-top: 15px; font-weight: bold"
+          ></div>
           <h3 style="margin-top: 20px">Add Student Manually</h3>
           <input id="newStudentId" placeholder="Student ID" />
           <input id="newStudentName" placeholder="Student Name" />
@@ -551,55 +554,49 @@
             <option value="jhs3">JHS3</option>
           </select>
 
-
-          <hr style="margin:30px 0">
-
-        
-
-
+          <hr style="margin: 30px 0" />
 
           <button class="pay-btn" onclick="addStudent()">Save Student</button>
 
-
-
           <h3>👨‍🎓 Manage Students</h3>
-          
-          <div class="selection" style="margin-bottom:15px">
+
+          <div class="selection" style="margin-bottom: 15px">
             <button class="pay-btn" onclick="loadStudentsByClass('jhs1')">
               JHS 1
             </button>
-          
+
             <button class="pay-btn" onclick="loadStudentsByClass('jhs2')">
               JHS 2
             </button>
-          
+
             <button class="pay-btn" onclick="loadStudentsByClass('jhs3')">
               JHS 3
             </button>
           </div>
-          
+
           <div id="studentList"></div>
 
-
-
           <h3 style="margin-top: 20px">Bulk Question Upload</h3>
-          <hr style="margin:20px 0">
+          <hr style="margin: 20px 0" />
 
-<h3>📥 Bulk Upload Questions (Excel)</h3>
+          <h3>📥 Bulk Upload Questions (Excel)</h3>
 
-<button class="pay-btn" onclick="downloadTemplate()">
-  ⬇ Download Excel Template
-</button>
+          <button class="pay-btn" onclick="downloadTemplate()">
+            ⬇ Download Excel Template
+          </button>
 
-<br><br>
+          <br /><br />
 
-<input type="file" id="excelFile" accept=".xlsx,.xls,.csv" />
+          <input type="file" id="excelFile" accept=".xlsx,.xls,.csv" />
 
-<button class="pay-btn" onclick="uploadExcelQuestions()">
-  🚀 Upload Excel File
-</button>
+          <button class="pay-btn" onclick="uploadExcelQuestions()">
+            🚀 Upload Excel File
+          </button>
 
-<div id="uploadStatus" style="margin-top:15px;font-weight:bold;"></div>
+          <div
+            id="uploadStatus"
+            style="margin-top: 15px; font-weight: bold"
+          ></div>
           <h3 style="margin-top: 20px">Upload Question Manually</h3>
 
           <select id="adminClass">
@@ -803,18 +800,29 @@
       async function loadQuestions() {
         questionBank = { jhs1: {}, jhs2: {}, jhs3: {} };
 
-        const snap = await getDocs(collection(db, 'questions'));
+        try {
+          const snap = await getDocs(collection(db, 'questions'));
 
-        snap.forEach((docSnap) => {
-          const d = docSnap.data();
+          snap.forEach((docSnap) => {
+            const d = docSnap.data();
 
-          if (!questionBank[d.level][d.subject])
-            questionBank[d.level][d.subject] = [];
+            const level = d.level?.toLowerCase();
+            const subject = d.subject?.toLowerCase();
 
-          questionBank[d.level][d.subject].push(d);
-        });
+            if (!['jhs1', 'jhs2', 'jhs3'].includes(level)) return;
+            if (!subject) return;
 
-        questionsLoaded = true;
+            if (!questionBank[level][subject])
+              questionBank[level][subject] = [];
+
+            questionBank[level][subject].push(d);
+          });
+
+          console.log('Questions Loaded:', questionBank);
+          questionsLoaded = true;
+        } catch (error) {
+          console.error('Error loading questions:', error);
+        }
       }
 
       async function loadSnapshots() {
@@ -1316,26 +1324,25 @@ ${shuffled
         });
       }
 
+      // LOAD STUDENTS BY CLASS
+      window.loadStudentsByClass = async function (selectedClass) {
+        const list = document.getElementById('studentList');
+        list.innerHTML = 'Loading students...';
 
-// LOAD STUDENTS BY CLASS
-window.loadStudentsByClass = async function (selectedClass) {
-  const list = document.getElementById("studentList");
-  list.innerHTML = "Loading students...";
+        try {
+          const snap = await getDocs(collection(db, 'students'));
+          list.innerHTML = '';
 
-  try {
-    const snap = await getDocs(collection(db, "students"));
-    list.innerHTML = "";
+          let found = false;
 
-    let found = false;
+          snap.forEach((docSnap) => {
+            const student = docSnap.data();
+            const studentId = docSnap.id;
 
-    snap.forEach((docSnap) => {
-      const student = docSnap.data();
-      const studentId = docSnap.id;
+            if (student.class === selectedClass) {
+              found = true;
 
-      if (student.class === selectedClass) {
-        found = true;
-
-        list.innerHTML += `
+              list.innerHTML += `
           <div style="
             border:1px solid #ddd;
             padding:15px;
@@ -1355,219 +1362,203 @@ window.loadStudentsByClass = async function (selectedClass) {
             </button>
           </div>
         `;
-      }
-    });
+            }
+          });
 
-    if (!found) {
-      list.innerHTML = `<b>No students found for ${selectedClass.toUpperCase()}.</b>`;
-    }
+          if (!found) {
+            list.innerHTML = `<b>No students found for ${selectedClass.toUpperCase()}.</b>`;
+          }
+        } catch (error) {
+          console.error(error);
+          list.innerHTML = '<b>Error loading students.</b>';
+        }
+      };
 
-  } catch (error) {
-    console.error(error);
-    list.innerHTML = "<b>Error loading students.</b>";
-  }
-};
+      // DELETE STUDENT
+      window.deleteStudent = async function (studentId, studentClass) {
+        const confirmDelete = confirm(
+          `Are you sure you want to delete student ${studentId}?`,
+        );
 
+        if (!confirmDelete) return;
 
-// DELETE STUDENT
-window.deleteStudent = async function (studentId, studentClass) {
-  const confirmDelete = confirm(
-    `Are you sure you want to delete student ${studentId}?`
-  );
+        try {
+          await deleteDoc(doc(db, 'students', studentId));
 
-  if (!confirmDelete) return;
+          alert('Student deleted successfully.');
 
-  try {
-    await deleteDoc(doc(db, "students", studentId));
-
-    alert("Student deleted successfully.");
-
-    // Refresh list
-    loadStudentsByClass(studentClass);
-
-  } catch (error) {
-    console.error(error);
-    alert("Error deleting student.");
-  }
-};
-
-
+          // Refresh list
+          loadStudentsByClass(studentClass);
+        } catch (error) {
+          console.error(error);
+          alert('Error deleting student.');
+        }
+      };
 
       // DOWNLOAD STUDENT TEMPLATE
-window.downloadStudentTemplate = function () {
-  const wb = XLSX.utils.book_new();
+      window.downloadStudentTemplate = function () {
+        const wb = XLSX.utils.book_new();
 
-  const data = [
-    ["Student ID", "Student Name", "Class (jhs1/jhs2/jhs3)"],
-    ["JHS1001", "Kwame Mensah", "jhs1"],
-    ["JHS2001", "Ama Owusu", "jhs2"]
-  ];
+        const data = [
+          ['Student ID', 'Student Name', 'Class (jhs1/jhs2/jhs3)'],
+          ['JHS1001', 'Kwame Mensah', 'jhs1'],
+          ['JHS2001', 'Ama Owusu', 'jhs2'],
+        ];
 
-  const ws = XLSX.utils.aoa_to_sheet(data);
-  XLSX.utils.book_append_sheet(wb, ws, "Students");
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        XLSX.utils.book_append_sheet(wb, ws, 'Students');
 
-  XLSX.writeFile(wb, "CBT_Student_Template.xlsx");
-};
+        XLSX.writeFile(wb, 'CBT_Student_Template.xlsx');
+      };
 
+      // UPLOAD STUDENT EXCEL
+      window.uploadStudentExcel = async function () {
+        const fileInput = document.getElementById('studentExcelFile');
+        const status = document.getElementById('studentUploadStatus');
 
-// UPLOAD STUDENT EXCEL
-window.uploadStudentExcel = async function () {
-  const fileInput = document.getElementById("studentExcelFile");
-  const status = document.getElementById("studentUploadStatus");
+        if (!fileInput.files.length) {
+          alert('Please select a student Excel file.');
+          return;
+        }
 
-  if (!fileInput.files.length) {
-    alert("Please select a student Excel file.");
-    return;
-  }
+        const file = fileInput.files[0];
+        const reader = new FileReader();
 
-  const file = fileInput.files[0];
-  const reader = new FileReader();
+        reader.onload = async function (e) {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
 
-  reader.onload = async function (e) {
-    const data = new Uint8Array(e.target.result);
-    const workbook = XLSX.read(data, { type: "array" });
+          const sheetName = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[sheetName];
 
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
+          const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+          if (jsonData.length < 2) {
+            alert('Excel file is empty.');
+            return;
+          }
 
-    if (jsonData.length < 2) {
-      alert("Excel file is empty.");
-      return;
-    }
+          let successCount = 0;
+          let skippedCount = 0;
 
-    let successCount = 0;
-    let skippedCount = 0;
+          for (let i = 1; i < jsonData.length; i++) {
+            const row = jsonData[i];
 
-    for (let i = 1; i < jsonData.length; i++) {
-      const row = jsonData[i];
+            const studentId = row[0]?.toString().trim();
+            const studentName = row[1]?.toString().trim();
+            const studentClass = row[2]?.toString().toLowerCase().trim();
 
-      const studentId = row[0]?.toString().trim();
-      const studentName = row[1]?.toString().trim();
-      const studentClass = row[2]?.toString().toLowerCase().trim();
+            if (!studentId || !studentName || !studentClass) {
+              skippedCount++;
+              continue;
+            }
 
-      if (!studentId || !studentName || !studentClass) {
-        skippedCount++;
-        continue;
-      }
+            if (!['jhs1', 'jhs2', 'jhs3'].includes(studentClass)) {
+              skippedCount++;
+              continue;
+            }
 
-      if (!["jhs1", "jhs2", "jhs3"].includes(studentClass)) {
-        skippedCount++;
-        continue;
-      }
+            try {
+              await setDoc(doc(db, 'students', studentId), {
+                name: studentName,
+                class: studentClass,
+              });
 
-      try {
-        await setDoc(doc(db, "students", studentId), {
-          name: studentName,
-          class: studentClass
-        });
+              successCount++;
+            } catch (err) {
+              console.error('Student upload error:', err);
+              skippedCount++;
+            }
+          }
 
-        successCount++;
-      } catch (err) {
-        console.error("Student upload error:", err);
-        skippedCount++;
-      }
-    }
-
-    status.innerHTML = `
+          status.innerHTML = `
       ✅ Uploaded: ${successCount} students <br>
       ⚠ Skipped: ${skippedCount} rows
     `;
-  };
+        };
 
-  reader.readAsArrayBuffer(file);
-};
-// DOWNLOAD TEMPLATE
-window.downloadTemplate = function () {
-  const wb = XLSX.utils.book_new();
+        reader.readAsArrayBuffer(file);
+      };
+      // DOWNLOAD TEMPLATE
+      window.downloadTemplate = function () {
+        const wb = XLSX.utils.book_new();
 
-  const data = [
-    [
-      "Class (jhs1/jhs2/jhs3)",
-      "Subject",
-      "Question",
-      "Option1",
-      "Option2",
-      "Option3",
-      "Option4",
-      "Correct Answer"
-    ],
-    [
-      "jhs1",
-      "english",
-      "What is 2 + 2?",
-      "3",
-      "4",
-      "5",
-      "6",
-      "4"
-    ]
-  ];
+        const data = [
+          [
+            'Class (jhs1/jhs2/jhs3)',
+            'Subject',
+            'Question',
+            'Option1',
+            'Option2',
+            'Option3',
+            'Option4',
+            'Correct Answer',
+          ],
+          ['jhs1', 'english', 'What is 2 + 2?', '3', '4', '5', '6', '4'],
+        ];
 
-  const ws = XLSX.utils.aoa_to_sheet(data);
-  XLSX.utils.book_append_sheet(wb, ws, "Questions");
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        XLSX.utils.book_append_sheet(wb, ws, 'Questions');
 
-  XLSX.writeFile(wb, "CBT_Questions_Template.xlsx");
-};
+        XLSX.writeFile(wb, 'CBT_Questions_Template.xlsx');
+      };
 
+      // UPLOAD EXCEL QUESTIONS
+      window.uploadExcelQuestions = async function () {
+        const fileInput = document.getElementById('excelFile');
+        const status = document.getElementById('uploadStatus');
 
-// UPLOAD EXCEL QUESTIONS
-window.uploadExcelQuestions = async function () {
-  const fileInput = document.getElementById("excelFile");
-  const status = document.getElementById("uploadStatus");
+        if (!fileInput.files.length) {
+          alert('Please select an Excel file.');
+          return;
+        }
 
-  if (!fileInput.files.length) {
-    alert("Please select an Excel file.");
-    return;
-  }
+        const file = fileInput.files[0];
+        const reader = new FileReader();
 
-  const file = fileInput.files[0];
-  const reader = new FileReader();
+        reader.onload = async function (e) {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
 
-  reader.onload = async function (e) {
-    const data = new Uint8Array(e.target.result);
-    const workbook = XLSX.read(data, { type: "array" });
+          const sheetName = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[sheetName];
 
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
+          const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+          if (jsonData.length < 2) {
+            alert('Excel file is empty.');
+            return;
+          }
 
-    if (jsonData.length < 2) {
-      alert("Excel file is empty.");
-      return;
-    }
+          let successCount = 0;
 
-    let successCount = 0;
+          for (let i = 1; i < jsonData.length; i++) {
+            const row = jsonData[i];
 
-    for (let i = 1; i < jsonData.length; i++) {
-      const row = jsonData[i];
+            if (!row[0] || !row[2]) continue;
 
-      if (!row[0] || !row[2]) continue;
+            try {
+              await addDoc(collection(db, 'questions'), {
+                level: row[0].toLowerCase(),
+                subject: row[1].toLowerCase(),
+                q: row[2],
+                options: [row[3], row[4], row[5], row[6]].filter(Boolean),
+                answer: row[7],
+              });
 
-      try {
-        await addDoc(collection(db, "questions"), {
-          level: row[0].toLowerCase(),
-          subject: row[1].toLowerCase(),
-          q: row[2],
-          options: [row[3], row[4], row[5], row[6]].filter(Boolean),
-          answer: row[7]
-        });
+              successCount++;
+            } catch (err) {
+              console.error('Row upload error:', err);
+            }
+          }
 
-        successCount++;
-      } catch (err) {
-        console.error("Row upload error:", err);
-      }
-    }
+          status.innerHTML = `✅ Successfully uploaded ${successCount} questions.`;
 
-    status.innerHTML = `✅ Successfully uploaded ${successCount} questions.`;
+          loadQuestions();
+        };
 
-    loadQuestions();
-  };
-
-  reader.readAsArrayBuffer(file);
-};
+        reader.readAsArrayBuffer(file);
+      };
       // expose
       window.verifyStudent = verifyStudent;
       window.openAdmin = openAdmin;
