@@ -552,9 +552,36 @@
           </select>
 
 
+          <hr style="margin:30px 0">
 
-          
+        
+
+
+
           <button class="pay-btn" onclick="addStudent()">Save Student</button>
+
+
+
+          <h3>👨‍🎓 Manage Students</h3>
+          
+          <div class="selection" style="margin-bottom:15px">
+            <button class="pay-btn" onclick="loadStudentsByClass('jhs1')">
+              JHS 1
+            </button>
+          
+            <button class="pay-btn" onclick="loadStudentsByClass('jhs2')">
+              JHS 2
+            </button>
+          
+            <button class="pay-btn" onclick="loadStudentsByClass('jhs3')">
+              JHS 3
+            </button>
+          </div>
+          
+          <div id="studentList"></div>
+
+
+
           <h3 style="margin-top: 20px">Bulk Question Upload</h3>
           <hr style="margin:20px 0">
 
@@ -1288,6 +1315,84 @@ ${shuffled
     `;
         });
       }
+
+
+// LOAD STUDENTS BY CLASS
+window.loadStudentsByClass = async function (selectedClass) {
+  const list = document.getElementById("studentList");
+  list.innerHTML = "Loading students...";
+
+  try {
+    const snap = await getDocs(collection(db, "students"));
+    list.innerHTML = "";
+
+    let found = false;
+
+    snap.forEach((docSnap) => {
+      const student = docSnap.data();
+      const studentId = docSnap.id;
+
+      if (student.class === selectedClass) {
+        found = true;
+
+        list.innerHTML += `
+          <div style="
+            border:1px solid #ddd;
+            padding:15px;
+            margin:15px 0;
+            border-radius:12px;
+            background:white;
+          ">
+            <p><b>ID:</b> ${studentId}</p>
+            <p><b>Name:</b> ${student.name}</p>
+            <p><b>Class:</b> ${student.class.toUpperCase()}</p>
+
+            <button 
+              class="pay-btn"
+              onclick="deleteStudent('${studentId}','${selectedClass}')"
+              style="background:#d90429;">
+              🗑 Delete Student
+            </button>
+          </div>
+        `;
+      }
+    });
+
+    if (!found) {
+      list.innerHTML = `<b>No students found for ${selectedClass.toUpperCase()}.</b>`;
+    }
+
+  } catch (error) {
+    console.error(error);
+    list.innerHTML = "<b>Error loading students.</b>";
+  }
+};
+
+
+// DELETE STUDENT
+window.deleteStudent = async function (studentId, studentClass) {
+  const confirmDelete = confirm(
+    `Are you sure you want to delete student ${studentId}?`
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+    await deleteDoc(doc(db, "students", studentId));
+
+    alert("Student deleted successfully.");
+
+    // Refresh list
+    loadStudentsByClass(studentClass);
+
+  } catch (error) {
+    console.error(error);
+    alert("Error deleting student.");
+  }
+};
+
+
+
       // DOWNLOAD STUDENT TEMPLATE
 window.downloadStudentTemplate = function () {
   const wb = XLSX.utils.book_new();
