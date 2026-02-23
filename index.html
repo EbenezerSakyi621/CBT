@@ -535,7 +535,24 @@
           </select>
 
           <button class="pay-btn" onclick="addStudent()">Save Student</button>
+          <h3 style="margin-top: 20px">Bulk Question Upload</h3>
+          <hr style="margin:20px 0">
 
+<h3>📥 Bulk Upload Questions (Excel)</h3>
+
+<button class="pay-btn" onclick="downloadTemplate()">
+  ⬇ Download Excel Template
+</button>
+
+<br><br>
+
+<input type="file" id="excelFile" accept=".xlsx,.xls,.csv" />
+
+<button class="pay-btn" onclick="uploadExcelQuestions()">
+  🚀 Upload Excel File
+</button>
+
+<div id="uploadStatus" style="margin-top:15px;font-weight:bold;"></div>
           <h3 style="margin-top: 20px">Upload Question</h3>
 
           <select id="adminClass">
@@ -1251,7 +1268,96 @@ ${shuffled
     `;
         });
       }
+// DOWNLOAD TEMPLATE
+window.downloadTemplate = function () {
+  const wb = XLSX.utils.book_new();
 
+  const data = [
+    [
+      "Class (jhs1/jhs2/jhs3)",
+      "Subject",
+      "Question",
+      "Option1",
+      "Option2",
+      "Option3",
+      "Option4",
+      "Correct Answer"
+    ],
+    [
+      "jhs1",
+      "english",
+      "What is 2 + 2?",
+      "3",
+      "4",
+      "5",
+      "6",
+      "4"
+    ]
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  XLSX.utils.book_append_sheet(wb, ws, "Questions");
+
+  XLSX.writeFile(wb, "CBT_Questions_Template.xlsx");
+};
+
+
+// UPLOAD EXCEL QUESTIONS
+window.uploadExcelQuestions = async function () {
+  const fileInput = document.getElementById("excelFile");
+  const status = document.getElementById("uploadStatus");
+
+  if (!fileInput.files.length) {
+    alert("Please select an Excel file.");
+    return;
+  }
+
+  const file = fileInput.files[0];
+  const reader = new FileReader();
+
+  reader.onload = async function (e) {
+    const data = new Uint8Array(e.target.result);
+    const workbook = XLSX.read(data, { type: "array" });
+
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+    if (jsonData.length < 2) {
+      alert("Excel file is empty.");
+      return;
+    }
+
+    let successCount = 0;
+
+    for (let i = 1; i < jsonData.length; i++) {
+      const row = jsonData[i];
+
+      if (!row[0] || !row[2]) continue;
+
+      try {
+        await addDoc(collection(db, "questions"), {
+          level: row[0].toLowerCase(),
+          subject: row[1].toLowerCase(),
+          q: row[2],
+          options: [row[3], row[4], row[5], row[6]].filter(Boolean),
+          answer: row[7]
+        });
+
+        successCount++;
+      } catch (err) {
+        console.error("Row upload error:", err);
+      }
+    }
+
+    status.innerHTML = `✅ Successfully uploaded ${successCount} questions.`;
+
+    loadQuestions();
+  };
+
+  reader.readAsArrayBuffer(file);
+};
       // expose
       window.verifyStudent = verifyStudent;
       window.openAdmin = openAdmin;
@@ -1414,5 +1520,6 @@ ${percent >= 50 ? 'PASS' : 'FAIL'}
       }
       // ]]>
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
   </body>
 </html>
