@@ -777,9 +777,9 @@
       let questionBank = { jhs1: {}, jhs2: {}, jhs3: {} };
       let questionsLoaded = false;
       let currentStudent = null;
-      let currentQuestions = [];
-      let currentSubject = ''; // ✅ ADD THIS
-      let timerInterval;
+let currentQuestions = [];
+let currentSubject = '';   // ✅ ADD THIS
+let timerInterval;
 
       // UI helpers
       function hideAll() {
@@ -1590,11 +1590,13 @@ margin:30px auto;
 text-align:center;
 box-shadow:0 10px 40px rgba(0,0,0,0.2);
 ">
-
+<img src="watermark.png" 
+     style="width:90px;height:90px;margin-bottom:15px;object-fit:contain;">
 <h2>🎓 SKY ELITE ASSESSMENT PORTAL</h2>
 <hr><br>
 
 <p><b>Student:</b> ${currentStudent.name}</p>
+<p><b>Class:</b> ${currentStudent.class.toUpperCase()}</p>
 <p><b>Subject:</b> ${currentSubject.toUpperCase()}</p>
 <p><b>Score:</b> ${percent}%</p>
 <p><b>Total Questions:</b> ${currentQuestions.length}</p>
