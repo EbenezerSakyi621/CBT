@@ -298,6 +298,28 @@
           padding: 10px;
         }
       }
+      @media print {
+        body * {
+          visibility: hidden;
+        }
+
+        #resultSlip,
+        #resultSlip * {
+          visibility: visible;
+        }
+
+        #resultSlip {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+        }
+
+        #printBox,
+        #goBackBox {
+          display: none !important;
+        }
+      }
     </style>
     <style>
       /* Center the button (optional) */
@@ -1629,7 +1651,7 @@
       </h1>
 
       <br>
-      <canvas id="qrCodeCanvas"></canvas>
+      <img id="qrCodeImage" />
       <p style="font-size:12px;color:gray;">
       Scan to verify result online
       </p>
@@ -1641,22 +1663,17 @@
         resultSlip.classList.remove('hidden');
         printBox.classList.remove('hidden');
 
-        QRCode.toCanvas(document.getElementById('qrCodeCanvas'), verifyURL, {
-          width: 130,
+        QRCode.toDataURL(verifyURL, { width: 130 }, function (err, url) {
+          if (err) {
+            console.error(err);
+            return;
+          }
+
+          document.getElementById('qrCodeImage').src = url;
         });
       }
       function printSlip() {
-        const slipContent = document.getElementById('resultSlip').innerHTML;
-
-        const originalContent = document.body.innerHTML;
-
-        document.body.innerHTML = slipContent;
-
         window.print();
-
-        document.body.innerHTML = originalContent;
-
-        window.location.reload();
       }
     </script>
     <!-- Code injected by live-server -->
