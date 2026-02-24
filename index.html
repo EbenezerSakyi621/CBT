@@ -777,9 +777,9 @@
       let questionBank = { jhs1: {}, jhs2: {}, jhs3: {} };
       let questionsLoaded = false;
       let currentStudent = null;
-let currentQuestions = [];
-let currentSubject = '';   // ✅ ADD THIS
-let timerInterval;
+      let currentQuestions = [];
+      let currentSubject = ''; // ✅ ADD THIS
+      let timerInterval;
 
       // UI helpers
       function hideAll() {
@@ -1577,8 +1577,27 @@ ${shuffled
       window.deleteAllSnapshots = deleteAllSnapshots;
       window.loadAdminQuestionsByClass = loadAdminQuestionsByClass;
       window.deleteQuestion = deleteQuestion;
-      function generateSlip(score) {
+      async function generateSlip(score) {
         const percent = Math.round((score / currentQuestions.length) * 100);
+
+        const resultId = 'RES-' + Date.now();
+
+        const resultData = {
+          resultId: resultId,
+          studentName: currentStudent.name,
+          class: currentStudent.class,
+          subject: currentSubject,
+          score: percent,
+          total: currentQuestions.length,
+          date: new Date(),
+          status: percent >= 50 ? 'PASS' : 'FAIL',
+        };
+
+        // ✅ Save to Firestore
+        await setDoc(doc(db, 'results', resultId), resultData);
+
+        const verifyURL =
+          window.location.origin + '/verify.html?resultId=' + resultId;
 
         const slip = `
 <div style="
@@ -1588,23 +1607,31 @@ border-radius:16px;
 max-width:500px;
 margin:30px auto;
 text-align:center;
-box-shadow:0 10px 40px rgba(0,0,0,0.2);
+font-family:Segoe UI, sans-serif;
 ">
+
 <img src="watermark.png" 
-     style="width:90px;height:90px;margin-bottom:15px;object-fit:contain;">
-<h2>🎓 SKY ELITE ASSESSMENT PORTAL</h2>
+     style="width:90px;height:90px;margin-bottom:15px;">
+
+<h2>SKY ELITE ASSESSMENT PORTAL</h2>
 <hr><br>
 
-<p><b>Student:</b> ${currentStudent.name}</p>
-<p><b>Class:</b> ${currentStudent.class.toUpperCase()}</p>
-<p><b>Subject:</b> ${currentSubject.toUpperCase()}</p>
+<p><b>Result ID:</b> ${resultId}</p>
+<p><b>Student:</b> ${resultData.studentName}</p>
+<p><b>Class:</b> ${resultData.class.toUpperCase().replace('JHS', 'JHS ')}</p>
+<p><b>Subject:</b> ${resultData.subject.toUpperCase()}</p>
 <p><b>Score:</b> ${percent}%</p>
-<p><b>Total Questions:</b> ${currentQuestions.length}</p>
 <p><b>Date:</b> ${new Date().toLocaleDateString()}</p>
 
 <h1 style="color:${percent >= 50 ? '#38b000' : '#d90429'}">
-${percent >= 50 ? 'PASS' : 'FAIL'}
+${resultData.status}
 </h1>
+
+<br>
+<canvas id="qrCodeCanvas"></canvas>
+<p style="font-size:12px;color:gray;">
+Scan to verify result online
+</p>
 
 </div>
 `;
@@ -1612,14 +1639,10 @@ ${percent >= 50 ? 'PASS' : 'FAIL'}
         resultSlip.innerHTML = slip;
         resultSlip.classList.remove('hidden');
         printBox.classList.remove('hidden');
-      }
-      window.printSlip = () => {
-        const w = window.open('');
-        w.document.write(resultSlip.innerHTML);
-        w.print();
-      };
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js');
+
+        QRCode.toCanvas(document.getElementById('qrCodeCanvas'), verifyURL, {
+          width: 130,
+        });
       }
     </script>
     <!-- Code injected by live-server -->
@@ -1727,5 +1750,6 @@ ${percent >= 50 ? 'PASS' : 'FAIL'}
       // ]]>
     </script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
   </body>
 </html>
