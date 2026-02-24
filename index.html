@@ -639,18 +639,20 @@
 
           <h3 style="margin-top: 25px">Manage Questions</h3>
           <div class="selection" style="margin-bottom: 15px">
-            <button class="pay-btn" onclick="loadAdminQuestionsByClass('jhs1')">
+            <button class="pay-btn" onclick="prepareSubjectsForClass('jhs1')">
               JHS 1
             </button>
-
-            <button class="pay-btn" onclick="loadAdminQuestionsByClass('jhs2')">
+            <button class="pay-btn" onclick="prepareSubjectsForClass('jhs2')">
               JHS 2
             </button>
-
-            <button class="pay-btn" onclick="loadAdminQuestionsByClass('jhs3')">
+            <button class="pay-btn" onclick="prepareSubjectsForClass('jhs3')">
               JHS 3
             </button>
           </div>
+
+          <select id="adminSubjectSelect" class="hidden">
+            <option value="">-- Select Subject --</option>
+          </select>
 
           <h3 style="margin-top: 25px">Exam Snapshots</h3>
           <button class="pay-btn" onclick="loadSnapshots()">
@@ -996,6 +998,96 @@
         return seconds * count;
       }
 
+      // Prepare subject dropdown for selected class
+      window.prepareSubjectsForClass = async function (selectedClass) {
+        const subjectSelect = document.getElementById('adminSubjectSelect');
+        subjectSelect.innerHTML =
+          '<option value="">-- Select Subject --</option>';
+        subjectSelect.classList.remove('hidden');
+
+        // Get all questions for the class
+        const snap = await getDocs(collection(db, 'questions'));
+        const subjects = new Set();
+
+        snap.forEach((docSnap) => {
+          const q = docSnap.data();
+          if (q.level === selectedClass && q.subject) {
+            subjects.add(q.subject.toLowerCase());
+          }
+        });
+
+        if (subjects.size === 0) {
+          alert(`No subjects found for ${selectedClass.toUpperCase()}`);
+          subjectSelect.classList.add('hidden');
+          return;
+        }
+
+        subjects.forEach((sub) => {
+          const option = document.createElement('option');
+          option.value = sub;
+          option.textContent = sub.toUpperCase();
+          subjectSelect.appendChild(option);
+        });
+
+        // When subject changes, load the questions
+        subjectSelect.onchange = function () {
+          if (subjectSelect.value) {
+            loadAdminQuestionsByClassAndSubject(
+              selectedClass,
+              subjectSelect.value,
+            );
+          }
+        };
+      };
+
+      // Load questions filtered by class AND subject
+      async function loadAdminQuestionsByClassAndSubject(level, subject) {
+        const list = document.getElementById('questionList');
+        list.innerHTML = 'Loading...';
+
+        const snap = await getDocs(collection(db, 'questions'));
+        list.innerHTML = '';
+
+        let found = false;
+
+        snap.forEach((docSnap) => {
+          const q = docSnap.data();
+
+          if (
+            q.level === level &&
+            q.subject.toLowerCase() === subject.toLowerCase()
+          ) {
+            found = true;
+
+            list.innerHTML += `
+        <div style="
+          border:1px solid #ddd;
+          padding:15px;
+          margin:15px 0;
+          border-radius:12px;
+          background:white;
+        ">
+          <p style="color:#3b82f6;font-weight:bold;">
+            Class: ${q.level.toUpperCase()}
+          </p>
+          <p style="color:#16a34a;font-weight:bold;">
+            Subject: ${q.subject.toUpperCase()}
+          </p>
+          <hr style="margin:10px 0;">
+          <p><b>Question:</b> ${q.q}</p>
+          <br>
+          <button onclick="deleteQuestion('${docSnap.id}')" class="pay-btn" style="background:#d90429;">
+            🗑 Delete Question
+          </button>
+        </div>
+      `;
+          }
+        });
+
+        if (!found) {
+          list.innerHTML = `<b>No questions found for ${level.toUpperCase()} - ${subject.toUpperCase()}.</b>`;
+        }
+      }
       // ADMIN
       function openAdmin() {
         hideAll();
