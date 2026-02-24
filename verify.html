@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Result Verification</title>
+  <script type="module">
+
+    import { initializeApp } from 
+    "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+
+    import {
+      getFirestore,
+      doc,
+      getDoc
+    } from 
+    "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: 'AIzaSyAZ7SvvAECv7I1JNy0u1nUsC6q-8-5BUiY',
+        authDomain: 'elite-cbt-system-97ffa.firebaseapp.com',
+        projectId: 'elite-cbt-system-97ffa',
+        storageBucket: 'elite-cbt-system-97ffa.firebasestorage.app',
+        messagingSenderId: '978602825271',
+        appId: '1:978602825271:web:a2c26f3853ff155a4991b2',
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const params = new URLSearchParams(window.location.search);
+    const resultId = params.get("resultId");
+
+    async function verifyResult() {
+      if (!resultId) {
+        document.body.innerHTML = "<h2>Invalid Result ID</h2>";
+        return;
+      }
+
+      const snap = await getDoc(doc(db, "results", resultId));
+
+      if (!snap.exists()) {
+        document.body.innerHTML = "<h2>Result Not Found</h2>";
+        return;
+      }
+
+      const data = snap.data();
+
+      document.body.innerHTML = `
+        <div style="text-align:center;font-family:Segoe UI;padding:40px;">
+          <h1>🎓 SKY ELITE ASSESSMENT PORTAL</h1>
+          <h3>Official Result Verification</h3>
+          <hr><br>
+
+          <p><b>Result ID:</b> ${data.resultId}</p>
+          <p><b>Student:</b> ${data.studentName}</p>
+          <p><b>Class:</b> ${data.class.toUpperCase()}</p>
+          <p><b>Subject:</b> ${data.subject.toUpperCase()}</p>
+          <p><b>Score:</b> ${data.score}%</p>
+          <p><b>Status:</b> ${data.status}</p>
+          <p><b>Date:</b> 
+          ${new Date(data.date.seconds * 1000).toLocaleDateString()}</p>
+
+          <h2 style="color:green;">✔ VERIFIED</h2>
+        </div>
+      `;
+    }
+
+    verifyResult();
+
+  </script>
+</head>
+<body>
+  Verifying result...
+</body>
+</html>
