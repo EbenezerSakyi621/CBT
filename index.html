@@ -778,6 +778,7 @@
       let questionsLoaded = false;
       let currentStudent = null;
       let currentQuestions = [];
+      let currentSubject = ''; // ✅ ADD THIS
       let timerInterval;
 
       // UI helpers
@@ -1152,6 +1153,7 @@
       }
 
       function startExam(level, subject) {
+        currentSubject = subject;
         const questions = [...questionBank[level][subject]].sort(
           () => Math.random() - 0.5,
         );
@@ -1593,6 +1595,7 @@ box-shadow:0 10px 40px rgba(0,0,0,0.2);
 <hr><br>
 
 <p><b>Student:</b> ${currentStudent.name}</p>
+<p><b>Subject:</b> ${currentSubject.toUpperCase()}</p>
 <p><b>Score:</b> ${percent}%</p>
 <p><b>Total Questions:</b> ${currentQuestions.length}</p>
 <p><b>Date:</b> ${new Date().toLocaleDateString()}</p>
