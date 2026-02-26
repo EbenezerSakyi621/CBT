@@ -34,9 +34,9 @@
       background: url("watermark.png") center/contain no-repeat;
       width: 60vw;
       height: 60vw;
-      max-width: 500px;
-      max-height: 500px;
-      opacity: 0.05;
+      max-width: 5000px;
+      max-height: 5000px;
+      opacity: 1;
       pointer-events: none;
       z-index: 0;
     }
@@ -175,7 +175,7 @@
       let handler = PaystackPop.setup({
         key: 'pk_live_2936dc167ad577c516073c1376b737a5c63eccad',
         email: 'customer@email.com',
-        amount: 125000, // 25 GHS (Paystack uses pesewas)
+        amount: 12500, // 25 GHS (Paystack uses pesewas)
         currency: 'GHS',
 
         callback: function (response) {
