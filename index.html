@@ -1,1886 +1,320 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="manifest" href="manifest.json" />
-    <meta name="theme-color" content="#1a73e8" />
-    <title>SKY ELITE ASSESSMENT PORTAL | School Examination Platform</title>
-
-    <meta
-      name="description"
-      content="SKY ELITE ASSESSMENT PORTAL is a professional computer-based testing platform for junior high school students. Take exams online, get instant results, and improve academic performance."
-    />
-
-    <meta
-      name="keywords"
-      content="SKY ELITE ASSESSMENT PORTAL JHS, CBT system,SAKYI'S ELITE CBT, school exams, online testing, junior high school exams, Ghana CBT, student examination portal"
-    />
-
-    <meta name="author" content="SKY ELITE ASSESSMENT PORTAL" />
-
-    <!-- GOOGLE SEARCH VERIFICATION (optional later) -->
-    <meta name="robots" content="index, follow" />
-
-    <!-- OPEN GRAPH (When shared on WhatsApp / Facebook) -->
-    <meta property="og:title" content="SKY ELITE ASSESSMENT PORTAL" />
-    <meta
-      property="og:description"
-      content="Professional computer-based testing platform for students."
-    />
-    <meta property="og:type" content="website" />
-    <meta
-      property="og:image"
-      content="https://copilot.microsoft.com/th/id/BCO.1ea7bd57-6b61-4569-a05d-fc06496e08da.png"
-    />
-    <meta
-      property="og:url"
-      content="https://skyeliteassessmentportal.vercel.app/"
-    />
-
-    <link rel="icon" type="image/png" href="watermark.png" />
-
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #3B82F6, #1E3A8A);
-  min-height: 100vh;
-  padding: 20px;
-}
-.container {
-  max-width: 1100px;
-  margin: auto;
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 30px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-}
-
-      .header {
-        background: #1e293b;
-        padding: 30px;
-        text-align: center;
-        color: #f1f5f9;
-      }
-
-      .content {
-        padding: 40px;
-      }
-
-      .pay-btn {
-        padding: 14px 28px;
-        border: none;
-        border-radius: 12px;
-        cursor: pointer;
-        font-weight: 600;
-        background: #3b82f6;
-        color: white;
-      }
-
-      .selection {
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-        justify-content: center;
-        margin-top: 25px;
-      }
-
-      .hidden {
-        display: none;
-      }
-
-      input,
-      select {
-        width: 100%;
-        padding: 12px;
-        border-radius: 10px;
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        margin-top: 10px;
-      }
-
-      .dashboard {
-        display: grid;
-        grid-template-columns: 300px 1fr;
-        gap: 25px;
-      }
-
-      .profile {
-        background: rgba(255, 255, 255, 0.75);
-        padding: 25px;
-        border-radius: 18px;
-        text-align: center;
-      }
-
-      .avatar {
-        width: 90px;
-        height: 90px;
-        border-radius: 50%;
-        background: #1e293b;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        color: white;
-        margin: auto;
-      }
-
-      .question {
-        background: rgba(255, 255, 255, 0.85);
-        padding: 20px;
-        margin: 18px 0;
-        border-radius: 14px;
-      }
-
-      .timer {
-        font-size: 1.2rem;
-        font-weight: bold;
-        color: #d90429;
-      }
-
-      .adminBox {
-        background: white;
-        padding: 25px;
-        border-radius: 16px;
-        max-width: 600px;
-        margin: auto;
-      }
-      /* ================================
-  LARGE SCREENS (Desktops >1400px)
-================================ */
-      @media (min-width: 1400px) {
-        .container {
-          max-width: 1300px;
-        }
-
-        .dashboard {
-          grid-template-columns: 350px 1fr;
-        }
-
-        .content {
-          padding: 60px;
-        }
-      }
-
-      /* ================================
-  LAPTOPS / SMALL DESKTOPS
-================================ */
-      @media (max-width: 1200px) {
-        .container {
-          max-width: 95%;
-        }
-      }
-
-      /* ================================
-  TABLETS (iPad, etc.)
-================================ */
-      @media (max-width: 992px) {
-        .dashboard {
-          grid-template-columns: 1fr;
-        }
-
-        .profile {
-          margin-bottom: 20px;
-        }
-
-        .content {
-          padding: 25px;
-        }
-      }
-
-      /* ================================
-  LARGE PHONES
-================================ */
-      @media (max-width: 768px) {
-        body {
-          padding: 10px;
-        }
-
-        .header {
-          padding: 20px;
-        }
-
-        .header h1 {
-          font-size: 1.6rem;
-        }
-
-        .pay-btn {
-          width: 100%;
-        }
-
-        .selection {
-          flex-direction: column;
-        }
-      }
-
-      .watermark {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-image: url('watermark.png'); /* Replace with your image */
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: contain;
-        width: 60vw; /* Responsive width */
-        height: 60vw; /* Keep square ratio */
-        max-width: 500px; /* Desktop limit */
-        max-height: 500px;
-        opacity: 0.06; /* Light watermark */
-        pointer-events: none;
-        z-index: 0;
-      }
-
-      /* ================================
-  SMALL PHONES
-  (iPhone SE 2, iPhone 8, etc.)
-================================ */
-      @media (max-width: 480px) {
-        .content {
-          padding: 15px;
-        }
-
-        input,
-        select {
-          font-size: 16px; /* prevents zoom on iPhone */
-        }
-
-        .avatar {
-          width: 70px;
-          height: 70px;
-          font-size: 1.5rem;
-        }
-
-        .question {
-          padding: 15px;
-        }
-      }
-
-      /* ================================
-  EXTRA SMALL PHONES
-  ✅ iPhone SE (1st Gen - 320px)
-================================ */
-      @media (max-width: 360px) {
-        .header h1 {
-          font-size: 1.3rem;
-        }
-
-        .container {
-          border-radius: 14px;
-        }
-
-        .pay-btn {
-          padding: 12px;
-          font-size: 14px;
-        }
-
-        .timer {
-          font-size: 1rem;
-        }
-      }
-
-      /* ================================
-  ULTRA SMALL DEVICES (320px)
-================================ */
-      @media (max-width: 320px) {
-        .header h1 {
-          font-size: 1.1rem;
-        }
-
-        .content {
-          padding: 10px;
-        }
-      }
-      @media print {
-        body * {
-          visibility: hidden;
-        }
-
-        #resultSlip,
-        #resultSlip * {
-          visibility: visible;
-        }
-
-        #resultSlip {
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 100%;
-        }
-
-        #printBox,
-        #goBackBox {
-          display: none !important;
-        }
-      }
-    </style>
-    <style>
-      /* Center the button (optional) */
-      .button-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background: #f5f7fb;
-      }
-
-      /* Premium Button */
-      .pay-pay-btn {
-        padding: 16px 38px;
-        font-size: 18px;
-        font-weight: 600;
-        color: white;
-        border: none;
-        border-radius: 12px;
-        cursor: pointer;
-
-        background: #3b82f6;
-
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-      }
-
-      /* Hover Effect */
-      .pay-pay-btn:hover {
-        background: #2563eb;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
-      }
-
-      /* Click Effect */
-
-      /* Shine Animation */
-      .pay-pay-btn::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -75%;
-        width: 50%;
-        height: 100%;
-        background: #2563eb;
-
-        transition: 0.5s;
-      }
-      @media (max-width: 480px) {
-        .watermark {
-          width: 80vw;
-          height: 80vw;
-          opacity: 0.05;
-        }
-      }
-
-      .pay-pay-btn:hover::after {
-        background: #2563eb;
-      }
-      @media (max-width: 768px) {
-        #cameraBox {
-          width: 140px !important;
-          height: 110px !important;
-          top: 10px !important;
-          right: 10px !important;
-        }
-      }
-
-      #quizScreen {
-        position: relative;
-      }
-
-      #cameraWrapper {
-        position: sticky;
-        top: 0;
-        z-index: 999;
-
-        padding: 10px 0;
-        display: flex;
-        justify-content: flex-end;
-      }
-  
-      section {
-  margin-bottom: 30px;
-}
-      #cameraBox {
-        width: 220px;
-        height: 160px;
-        background: #000;
-        border-radius: 12px;
-        overflow: hidden;
-        border: 3px solid #3b82f6;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-      }
-
-      #cameraFeed {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      .cameraLabel {
-        position: absolute;
-        top: 5px;
-        left: 5px;
-        background: rgba(217, 4, 41, 0.9);
-        color: white;
-        font-size: 12px;
-        padding: 4px 8px;
-        border-radius: 8px;
-        font-weight: bold;
-      }
-
-      button:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-        opacity: 0.6;
-      }
-    </style>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "School",
-        "name": "SKY ELITE ASSESSMENT PORTAL",
-        "description": "Professional Computer-Based Testing platform for Junior High School students.",
-        "url": "https://skyeliteassessmentportal.vercel.app/",
-        "logo": "https://skyeliteassessmentportal.vercel.app/watermark.png",
-        "address": {
-          "@type": "PostalAddress",
-          "addressCountry": "Ghana"
-        }
-      }
-    </script>
-  </head>
-
-  <body>
-    <!-- CAMERA MONITOR -->
-
-    <!-- CAMERA MONITOR -->
-
-    <div class="watermark"></div>
-    <div class="container">
-      <div class="header">
-        <h1>🎓 SKY ELITE ASSESSMENT PORTAL</h1>
-        <p>Secure Online Examination System</p>
-        <div style="text-align:center; margin-bottom: 30px;">
-          
-          <p style="color:#555;">
-            Prevent cheating • Monitor students • Generate verified results
-          </p>
-        </div>
-      </div>
-    
-      <div class="content">
-        <!-- HOME -->
-        <div id="homeScreen">
-          <h2 style="text-align: center">Student Access</h2>
-          <input id="studentId" placeholder="Enter Student ID" />
-          <div class="selection">
-            <button class="pay-pay-btn" onclick="verifyStudent()">
-              Enter Exam
-            </button>
-          </div>
-
-          <hr style="margin: 40px 0" />
-
-          <h2 style="text-align: center">Administrator</h2>
-          <div class="selection">
-            <a
-              href="makepayment.html"
-              style="text-decoration: none"
-              class="pay-pay-btn"
-              about="_blank"
-              >Register As Admin</a
-            >
-
-            <script src="https://js.paystack.co/v1/inline.js"></script>
-
-            <script>
-              function payWithPaystack() {
-                let handler = PaystackPop.setup({
-                  key: 'pk_live_2936dc167ad577c516073c1376b737a5c63eccad',
-                  email: 'sakyiebenezer316@email.com',
-                  amount: 5000, // 10 GHS = 1000 pesewas
-                  currency: 'GHS',
-
-                  callback: function (response) {
-                    alert(
-                      'Payment successful! Reference: ' + response.reference,
-                    );
-
-                    // Send reference to Firebase here
-                    const paymentRef = doc(db, 'payments', response.reference);
-                    setDoc(paymentRef, {
-                      email: 'sakyiebenezer316@email.com',
-                      amount: 5000,
-                      currency: 'GHS',
-                      status: 'success',
-                      timestamp: new Date(),
-                    });
-
-                    // Unlock admin panel
-                    openAdmin();
-                  },
-
-                  onClose: function () {
-                    alert('Transaction cancelled');
-                  },
-                });
-
-                handler.openIframe();
-              }
-            </script>
-
-            <button class="pay-pay-btn" onclick="openAdmin()">
-              Admin Portal
-            </button>
-          </div>
-        </div>
-
-        <!-- ADMIN LOGIN -->
-        <div id="adminLogin" class="hidden adminBox">
-          <h2>Admin Login</h2>
-          <input id="adminEmail" placeholder="Email" />
-          <input id="adminPass" type="password" placeholder="Password" />
-
-          <div class="selection">
-            <button class="pay-btn" onclick="loginAdmin()">Login</button>
-            <button class="pay-btn" onclick="goHome()">Cancel</button>
-          </div>
-        </div>
-
-        <!-- ADMIN PANEL -->
-        <div id="adminPanel" class="hidden adminBox">
-          <h2>Admin Panel</h2>
-          <button class="pay-btn" onclick="logoutAdmin()">Logout</button>
-          <h3 style="margin-top: 20px">Bulk Upload Student</h3>
-          <hr style="margin: 20px 0" />
-
-          <h3>📥 Bulk Upload Students (Excel)</h3>
-
-          <button class="pay-btn" onclick="downloadStudentTemplate()">
-            ⬇ Download Student Template
-          </button>
-
-          <br /><br />
-
-          <input type="file" id="studentExcelFile" accept=".xlsx,.xls,.csv" />
-
-          <button class="pay-btn" onclick="uploadStudentExcel()">
-            🚀 Upload Student Excel
-          </button>
-
-          <div
-            id="studentUploadStatus"
-            style="margin-top: 15px; font-weight: bold"
-          ></div>
-          <h3 style="margin-top: 20px">Add Student Manually</h3>
-          <input id="newStudentId" placeholder="Student ID" />
-          <input id="newStudentName" placeholder="Student Name" />
-
-          <select id="newStudentClass">
-            <option value="jhs1">JHS1</option>
-            <option value="jhs2">JHS2</option>
-            <option value="jhs3">JHS3</option>
-          </select>
-
-          <hr style="margin: 30px 0" />
-
-          <button class="pay-btn" onclick="addStudent()">Save Student</button>
-
-          <h3>👨‍🎓 Manage Students</h3>
-
-          <div class="selection" style="margin-bottom: 15px">
-            <button class="pay-btn" onclick="loadStudentsByClass('jhs1')">
-              JHS 1
-            </button>
-
-            <button class="pay-btn" onclick="loadStudentsByClass('jhs2')">
-              JHS 2
-            </button>
-
-            <button class="pay-btn" onclick="loadStudentsByClass('jhs3')">
-              JHS 3
-            </button>
-          </div>
-
-          <div id="studentList"></div>
-
-          <h3 style="margin-top: 20px">Bulk Question Upload</h3>
-          <hr style="margin: 20px 0" />
-
-          <h3>📥 Bulk Upload Questions (Excel)</h3>
-
-          <button class="pay-btn" onclick="downloadTemplate()">
-            ⬇ Download Excel Template
-          </button>
-
-          <br /><br />
-
-          <input type="file" id="excelFile" accept=".xlsx,.xls,.csv" />
-
-          <button class="pay-btn" onclick="uploadExcelQuestions()">
-            🚀 Upload Excel File
-          </button>
-
-          <div
-            id="uploadStatus"
-            style="margin-top: 15px; font-weight: bold"
-          ></div>
-          <h3 style="margin-top: 20px">Upload Question Manually</h3>
-
-          <select id="adminClass">
-            <option value="jhs1">JHS1</option>
-            <option value="jhs2">JHS2</option>
-            <option value="jhs3">JHS3</option>
-          </select>
-
-          <input
-            id="adminSubject"
-            placeholder="Subject (ENGLISH, MATHEMATICS, SCIENCE)"
-          />
-          <input id="adminQuestion" placeholder="Enter Question Here" />
-          <input id="adminOptions" placeholder="Options comma separated" />
-          <input id="adminAnswer" placeholder="Correct Answer" />
-
-          <button class="pay-btn" onclick="addQuestion()">Upload</button>
-
-          <h3 style="margin-top: 25px">Manage Questions</h3>
-          <div class="selection" style="margin-bottom: 15px">
-            <button class="pay-btn" onclick="prepareSubjectsForClass('jhs1')">
-              JHS 1
-            </button>
-            <button class="pay-btn" onclick="prepareSubjectsForClass('jhs2')">
-              JHS 2
-            </button>
-            <button class="pay-btn" onclick="prepareSubjectsForClass('jhs3')">
-              JHS 3
-            </button>
-          </div>
-
-          <select id="adminSubjectSelect" class="hidden">
-            <option value="">-- Select Subject --</option>
-          </select>
-
-          <h3 style="margin-top: 25px">Exam Snapshots</h3>
-          <button class="pay-btn" onclick="loadSnapshots()">
-            View Snapshots
-          </button>
-          <button
-            class="pay-btn"
-            onclick="deleteAllSnapshots()"
-            style="background: #b00020; margin-bottom: 15px"
-          >
-            🗑 Delete ALL Snapshots
-          </button>
-          <div id="questionList"></div>
-        </div>
-
-        <div id="snapshotGallery" style="margin-top: 20px"></div>
-
-        <!-- DASHBOARD -->
-        <div id="dashboard" class="hidden">
-          <div class="dashboard">
-            <div class="profile">
-              <div class="avatar" id="avatar"></div>
-              <h3 id="welcome"></h3>
-              <button class="pay-btn" onclick="goHome()">Logout</button>
-            </div>
-
-            <div>
-              <h2>Select Class</h2>
-
-              <div class="selection">
-                <div class="selection">
-                  <button
-                    id="btn-jhs1"
-                    class="pay-btn"
-                    onclick="selectClass('jhs1')"
-                  >
-                    JHS 1
-                  </button>
-                  <button
-                    id="btn-jhs2"
-                    class="pay-btn"
-                    onclick="selectClass('jhs2')"
-                  >
-                    JHS 2
-                  </button>
-                  <button
-                    id="btn-jhs3"
-                    class="pay-btn"
-                    onclick="selectClass('jhs3')"
-                  >
-                    JHS 3
-                  </button>
-                </div>
-              </div>
-
-              <div id="subjects" class="selection" style="margin-top: 30px">
-                Preparing your exam...
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- QUIZ -->
-        <div id="quizScreen" class="hidden">
-          <!-- CAMERA WRAPPER -->
-          <div id="cameraWrapper">
-            <canvas
-              id="snapshotCanvas"
-              width="320"
-              height="240"
-              style="display: none"
-            ></canvas>
-
-            <div id="cameraBox">
-              <video id="cameraFeed" autoplay muted playsinline></video>
-              <div class="cameraLabel">🔴 LIVE</div>
-            </div>
-          </div>
-
-          <div class="timer" id="timer"></div>
-
-          <form id="quizForm"></form>
-
-          <div class="selection">
-            <button class="pay-btn" type="button" onclick="gradeTest()">
-              Submit
-            </button>
-          </div>
-
-          <h2 id="result" class="hidden"></h2>
-          <div id="resultSlip" class="hidden"></div>
-
-          <div class="selection hidden" id="printBox">
-            <button class="pay-btn" onclick="printSlip()">
-              🖨 Print Result
-            </button>
-          </div>
-
-          <div class="selection hidden" id="goBackBox">
-            <button class="pay-btn" onclick="goHome()">Go Back Home</button>
-          </div>
-        </div>
-      </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sky Creative | Secure CBT Platform</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #3B82F6, #1E3A8A);
+      color: #111;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background: transparent;
+      color: white;
+    }
+
+    header h2 {
+      font-weight: 700;
+    }
+
+    nav a {
+      margin-left: 20px;
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 80px 20px;
+      color: white;
+    }
+
+    .hero h1 {
+      font-size: 40px;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      opacity: 0.9;
+      margin-bottom: 30px;
+    }
+
+    .hero button {
+      padding: 15px 25px;
+      border: none;
+      border-radius: 10px;
+      background: #10B981;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .hero button:hover {
+      background: #059669;
+      transform: scale(1.05);
+    }
+
+    .section {
+      background: #f9fafb;
+      padding: 60px 20px;
+    }
+
+    .section h2 {
+      text-align: center;
+      margin-bottom: 40px;
+      color: #1E3A8A;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      color: #3B82F6;
+    }
+
+    .cta {
+      text-align: center;
+      padding: 60px 20px;
+      background: #1E3A8A;
+      color: white;
+    }
+
+    .cta button {
+      margin-top: 20px;
+      padding: 15px 25px;
+      border: none;
+      border-radius: 10px;
+      background: #F59E0B;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #111827;
+      color: white;
+    }
+    a{
+      text-decoration: none;
+    }
+      * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+
+    body {
+      background: linear-gradient(135deg, #3B82F6, #1E3A8A);
+      color:#111;
+    }
+
+    header {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:20px 40px; color:white;
+    }
+
+    nav a {
+      margin-left:20px; color:white; text-decoration:none; font-weight:500;
+    }
+
+    .hero {
+      text-align:center; padding:100px 20px; color:white;
+    }
+
+    .hero h1 { font-size:42px; margin-bottom:20px; }
+    .hero p { font-size:18px; opacity:0.9; margin-bottom:30px; }
+
+    .btn {
+      padding:15px 25px; border:none; border-radius:10px;
+      cursor:pointer; font-weight:600; transition:0.3s;
+    }
+
+    .btn-primary { background:#10B981; color:white; }
+    .btn-primary:hover { transform:scale(1.05); background:#059669; }
+
+    .section { background:#f9fafb; padding:70px 20px; }
+    .section h2 { text-align:center; margin-bottom:40px; color:#1E3A8A; }
+
+    .grid {
+      display:grid; gap:20px; max-width:1100px; margin:auto;
+      grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
+    }
+
+    .card {
+      background:white; padding:25px; border-radius:15px;
+      box-shadow:0 10px 20px rgba(0,0,0,0.1);
+      transition:0.3s;
+    }
+
+    .card:hover { transform:translateY(-5px); }
+
+    .card h3 { color:#3B82F6; margin-bottom:10px; }
+
+    .stats {
+      display:flex; justify-content:center; gap:40px; flex-wrap:wrap;
+      margin-top:30px;
+    }
+
+    .stat-box {
+      background:white; padding:20px; border-radius:12px;
+      text-align:center; box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .stat-box h3 { color:#1E3A8A; }
+
+    .cta {
+      text-align:center; padding:70px 20px;
+      background:#1E3A8A; color:white;
+    }
+
+    footer {
+      text-align:center; padding:20px;
+      background:#111827; color:white;
+    }
+
+    /* MEDIA QUERIES */
+
+    @media (max-width:1024px) {
+      .hero h1 { font-size:34px; }
+    }
+
+    @media (max-width:768px) {
+      header { flex-direction:column; gap:10px; }
+      nav a { margin:0 10px; }
+      .hero { padding:70px 15px; }
+      .hero h1 { font-size:28px; }
+      .hero p { font-size:16px; }
+    }
+
+    @media (max-width:480px) {
+      .hero h1 { font-size:24px; }
+      .btn { width:100%; }
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <h2>Sky Elite Assessment Portal</h2>
+  <nav>
+    <a href="#">Home</a>
+    <a href="nextp.html">Enter Exam</a>
+    <a href="makepayment.html">Sign Up</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Secure Online Examination Platform</h1>
+  <p>Monitor students, prevent cheating, and generate verified results instantly.</p>
+  <a href="makepayment.html" target="_blank" rel="noopener noreferrer"><button>Sign Up</button></a> 
+</section>
+
+<section class="section">
+  <h2>Powerful Features</h2>
+  <div class="features">
+    <div class="card">
+      <h3>Smart Monitoring</h3>
+      <p>Automatically captures student snapshots to detect cheating.</p>
     </div>
 
-    <script type="module">
-      import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js';
-
-      import {
-        getFirestore,
-        collection,
-        getDocs,
-        doc,
-        getDoc,
-        setDoc,
-        addDoc,
-        deleteDoc,
-      } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js';
-
-      import {
-        getAuth,
-        signInWithEmailAndPassword,
-        signOut,
-        setPersistence,
-        browserSessionPersistence,
-      } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js';
-
-      const firebaseConfig = {
-        apiKey: 'AIzaSyAZ7SvvAECv7I1JNy0u1nUsC6q-8-5BUiY',
-        authDomain: 'elite-cbt-system-97ffa.firebaseapp.com',
-        projectId: 'elite-cbt-system-97ffa',
-        storageBucket: 'elite-cbt-system-97ffa.firebasestorage.app',
-        messagingSenderId: '978602825271',
-        appId: '1:978602825271:web:a2c26f3853ff155a4991b2',
-      };
-
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
-      const auth = getAuth(app);
-
-      setPersistence(auth, browserSessionPersistence);
-
-      // STATE
-      let cameraStream = null;
-      let snapshotInterval = null;
-      let questionBank = { jhs1: {}, jhs2: {}, jhs3: {} };
-      let questionsLoaded = false;
-      let currentStudent = null;
-      let currentQuestions = [];
-      let currentSubject = ''; // ✅ ADD THIS
-      let timerInterval;
-
-      // UI helpers
-      function hideAll() {
-        document
-          .querySelectorAll(
-            '#homeScreen,#dashboard,#quizScreen,#adminLogin,#adminPanel',
-          )
-          .forEach((el) => el.classList.add('hidden'));
-      }
-
-      function goHome() {
-        hideAll();
-        homeScreen.classList.remove('hidden');
-      }
-
-      goHome();
-
-      // LOAD QUESTIONS (FIXED)
-      async function loadQuestions() {
-        questionBank = { jhs1: {}, jhs2: {}, jhs3: {} };
-
-        try {
-          const snap = await getDocs(collection(db, 'questions'));
-
-          snap.forEach((docSnap) => {
-            const d = docSnap.data();
-
-            const level = d.level?.toLowerCase();
-            const subject = d.subject?.toLowerCase();
-
-            if (!['jhs1', 'jhs2', 'jhs3'].includes(level)) return;
-            if (!subject) return;
-
-            if (!questionBank[level][subject])
-              questionBank[level][subject] = [];
-
-            questionBank[level][subject].push(d);
-          });
-
-          console.log('Questions Loaded:', questionBank);
-          questionsLoaded = true;
-        } catch (error) {
-          console.error('Error loading questions:', error);
-        }
-      }
-
-      async function loadSnapshots() {
-        hideAll();
-        adminPanel.classList.remove('hidden');
-
-        const gallery = document.getElementById('snapshotGallery');
-        gallery.innerHTML = 'Loading snapshots...';
-
-        try {
-          const snap = await getDocs(collection(db, 'snapshots'));
-          gallery.innerHTML = '';
-
-          snap.forEach((docSnap) => {
-            const data = docSnap.data();
-
-            gallery.innerHTML += `
-              <div id="snap-${docSnap.id}" style="
-                border:1px solid #ddd;
-                padding:15px;
-                margin-bottom:15px;
-                border-radius:12px;
-                background:white;
-              ">
-                <p><b>Student:</b> ${data.studentName}</p>
-                <p><b>ID:</b> ${data.studentId}</p>
-                <p><b>Time:</b> ${
-                  data.timestamp?.seconds
-                    ? new Date(data.timestamp.seconds * 1000).toLocaleString()
-                    : 'Unknown'
-                }</p>
-
-                <img src="${data.image}"
-                     style="width:200px;border-radius:10px;margin-top:10px;"><br><br>
-
-                <button class="pay-btn"
-                        onclick="deleteSnapshot('${docSnap.id}')"
-                        style="background:#d90429;">
-                  Delete Snapshot
-                </button>
-              </div>
-            `;
-          });
-
-          if (!gallery.innerHTML) {
-            gallery.innerHTML = '<b>No snapshots found.</b>';
-          }
-        } catch (err) {
-          gallery.innerHTML = '<b>Error loading snapshots.</b>';
-          console.error(err);
-        }
-      }
-
-      async function deleteSnapshot(id) {
-        const confirmDelete = confirm(
-          'Are you sure you want to delete this snapshot?',
-        );
-        if (!confirmDelete) return;
-
-        try {
-          await deleteDoc(doc(db, 'snapshots', id));
-
-          // Remove from UI instantly
-          const element = document.getElementById(`snap-${id}`);
-          if (element) element.remove();
-
-          alert('Snapshot deleted successfully.');
-        } catch (err) {
-          console.error(err);
-          alert('Error deleting snapshot.');
-        }
-      }
-
-      async function deleteAllSnapshots() {
-        const confirmDelete = confirm(
-          '⚠ WARNING!\n\nThis will permanently delete ALL snapshots.\n\nAre you sure?',
-        );
-
-        if (!confirmDelete) return;
-
-        try {
-          const snap = await getDocs(collection(db, 'snapshots'));
-
-          const deletePromises = [];
-
-          snap.forEach((docSnap) => {
-            deletePromises.push(deleteDoc(doc(db, 'snapshots', docSnap.id)));
-          });
-
-          await Promise.all(deletePromises);
-
-          // Clear gallery instantly
-          document.getElementById('snapshotGallery').innerHTML =
-            '<b>All snapshots deleted.</b>';
-
-          alert('All snapshots successfully deleted.');
-        } catch (err) {
-          console.error(err);
-          alert('Error deleting snapshots.');
-        }
-      }
-
-      loadQuestions();
-      function startSnapshots() {
-        const video = document.getElementById('cameraFeed');
-        const canvas = document.getElementById('snapshotCanvas');
-        const ctx = canvas.getContext('2d');
-
-        snapshotInterval = setInterval(async () => {
-          if (!video.srcObject || !currentStudent) return;
-
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-          const imageData = canvas.toDataURL('image/jpeg', 0.6);
-
-          try {
-            await addDoc(collection(db, 'snapshots'), {
-              studentName: currentStudent.name,
-              studentId: studentId.value.trim(),
-              image: imageData,
-              timestamp: new Date(),
-            });
-
-            console.log('Snapshot saved');
-          } catch (err) {
-            console.error('Snapshot error:', err);
-          }
-        }, 5000); // every 10 seconds
-      }
-
-      function stopSnapshots() {
-        if (snapshotInterval) {
-          clearInterval(snapshotInterval);
-          snapshotInterval = null;
-        }
-      }
-
-      // TIMER CALCULATOR
-      function calculateExamTime(subject, count) {
-        subject = subject.toLowerCase();
-
-        let seconds = 30;
-
-        if (subject === 'english') seconds = 20;
-        if (subject === 'mathematics' || subject === 'mathematics')
-          seconds = 35;
-        if (subject === 'science') seconds = 35;
-
-        return seconds * count;
-      }
-
-      // Prepare subject dropdown for selected class
-      window.prepareSubjectsForClass = async function (selectedClass) {
-        const subjectSelect = document.getElementById('adminSubjectSelect');
-        subjectSelect.innerHTML =
-          '<option value="">-- Select Subject --</option>';
-        subjectSelect.classList.remove('hidden');
-
-        // Get all questions for the class
-        const snap = await getDocs(collection(db, 'questions'));
-        const subjects = new Set();
-
-        snap.forEach((docSnap) => {
-          const q = docSnap.data();
-          if (q.level === selectedClass && q.subject) {
-            subjects.add(q.subject.toLowerCase());
-          }
-        });
-
-        if (subjects.size === 0) {
-          alert(`No subjects found for ${selectedClass.toUpperCase()}`);
-          subjectSelect.classList.add('hidden');
-          return;
-        }
-
-        subjects.forEach((sub) => {
-          const option = document.createElement('option');
-          option.value = sub;
-          option.textContent = sub.toUpperCase();
-          subjectSelect.appendChild(option);
-        });
-
-        // When subject changes, load the questions
-        subjectSelect.onchange = function () {
-          if (subjectSelect.value) {
-            loadAdminQuestionsByClassAndSubject(
-              selectedClass,
-              subjectSelect.value,
-            );
-          }
-        };
-      };
-
-      // Load questions filtered by class AND subject
-      async function loadAdminQuestionsByClassAndSubject(level, subject) {
-        const list = document.getElementById('questionList');
-        list.innerHTML = 'Loading...';
-
-        const snap = await getDocs(collection(db, 'questions'));
-        list.innerHTML = '';
-
-        let found = false;
-
-        snap.forEach((docSnap) => {
-          const q = docSnap.data();
-
-          if (
-            q.level === level &&
-            q.subject.toLowerCase() === subject.toLowerCase()
-          ) {
-            found = true;
-
-            list.innerHTML += `
-        <div style="
-          border:1px solid #ddd;
-          padding:15px;
-          margin:15px 0;
-          border-radius:12px;
-          background:white;
-        ">
-          <p style="color:#3b82f6;font-weight:bold;">
-            Class: ${q.level.toUpperCase()}
-          </p>
-          <p style="color:#16a34a;font-weight:bold;">
-            Subject: ${q.subject.toUpperCase()}
-          </p>
-          <hr style="margin:10px 0;">
-          <p><b>Question:</b> ${q.q}</p>
-          <br>
-          <button onclick="deleteQuestion('${docSnap.id}')" class="pay-btn" style="background:#d90429;">
-            🗑 Delete Question
-          </button>
-        </div>
-      `;
-          }
-        });
-
-        if (!found) {
-          list.innerHTML = `<b>No questions found for ${level.toUpperCase()} - ${subject.toUpperCase()}.</b>`;
-        }
-      }
-      // ADMIN
-      function openAdmin() {
-        hideAll();
-        adminLogin.classList.remove('hidden');
-      }
-      async function deleteQuestion(id) {
-        const confirmDelete = confirm(
-          'Are you sure you want to delete this question?',
-        );
-        if (!confirmDelete) return;
-
-        try {
-          await deleteDoc(doc(db, 'questions', id));
-
-          alert('Question deleted successfully.');
-
-          // Refresh the list after deleting
-          const selectedClass = document.getElementById('adminClass').value;
-          loadAdminQuestionsByClass(selectedClass);
-        } catch (error) {
-          console.error('Error deleting question:', error);
-          alert('Error deleting question.');
-        }
-      }
-
-      async function loginAdmin() {
-        try {
-          const userCredential = await signInWithEmailAndPassword(
-            auth,
-            adminEmail.value.trim(),
-            adminPass.value,
-          );
-
-          // Only allow specific admin UID
-          const ADMIN_UID = 'rQhpIjwiPfQZO529wZoaG3S5Lys2';
-
-          if (userCredential.user.uid !== ADMIN_UID) {
-            alert('Unauthorized Admin');
-            await signOut(auth);
-            return;
-          }
-
-          hideAll();
-          adminPanel.classList.remove('hidden');
-        } catch (error) {
-          alert('Invalid Email or Password');
-          console.error(error);
-        }
-      }
-
-      function logoutAdmin() {
-        signOut(auth);
-        goHome();
-      }
-
-      async function addStudent() {
-        await setDoc(doc(db, 'students', newStudentId.value.trim()), {
-          name: newStudentName.value.trim(),
-          class: newStudentClass.value,
-        });
-
-        alert('Student added successfully.');
-      }
-
-      async function addQuestion() {
-        await addDoc(collection(db, 'questions'), {
-          level: adminClass.value,
-          subject: adminSubject.value.toLowerCase(),
-          q: adminQuestion.value,
-          options: adminOptions.value.split(',').map((o) => o.trim()),
-          answer: adminAnswer.value,
-        });
-
-        alert('Uploaded');
-
-        loadQuestions();
-        loadAdminQuestions();
-      }
-
-      async function loadAdminQuestionsByClass(selectedClass) {
-        const list = document.getElementById('questionList');
-        list.innerHTML = 'Loading...';
-
-        const snap = await getDocs(collection(db, 'questions'));
-        list.innerHTML = '';
-
-        let found = false;
-
-        snap.forEach((docSnap) => {
-          const q = docSnap.data();
-
-          if (q.level === selectedClass) {
-            found = true;
-
-            list.innerHTML += `
-              <div style="
-                border:1px solid #ddd;
-                padding:15px;
-                margin:15px 0;
-                border-radius:12px;
-                background:white;
-              ">
-
-                <p style="color:#3b82f6;font-weight:bold;">
-                  Class: ${q.level.toUpperCase()}
-                </p>
-
-                <p style="color:#16a34a;font-weight:bold;">
-                  Subject: ${q.subject.toUpperCase()}
-                </p>
-
-                <hr style="margin:10px 0;">
-
-                <p><b>Question:</b> ${q.q}</p>
-
-                <br>
-
-                <button
-                  onclick="deleteQuestion('${docSnap.id}')"
-                  class="pay-btn"
-                  style="background:#d90429;">
-                  🗑 Delete Question
-                </button>
-
-              </div>
-            `;
-          }
-        });
-
-        if (!found) {
-          list.innerHTML = `<b>No questions found for ${selectedClass.toUpperCase()}.</b>`;
-        }
-      }
-
-      // STUDENT
-      async function verifyStudent() {
-        try {
-          const id = document.getElementById('studentId').value.trim();
-
-          if (!id) {
-            alert('Please enter Student ID');
-            return;
-          }
-
-          const snap = await getDoc(doc(db, 'students', id));
-
-          if (!snap.exists()) {
-            alert('Student not found');
-            return;
-          }
-
-          currentStudent = snap.data();
-
-          hideAll();
-          document.getElementById('dashboard').classList.remove('hidden');
-
-          document.getElementById('welcome').innerText =
-            `Welcome, ${currentStudent.name}`;
-
-          document.getElementById('avatar').innerText = currentStudent.name
-            .charAt(0)
-            .toUpperCase();
-
-          const studentClass = currentStudent.class;
-
-          document.getElementById('btn-jhs1').disabled = true;
-          document.getElementById('btn-jhs2').disabled = true;
-          document.getElementById('btn-jhs3').disabled = true;
-
-          document.getElementById('btn-' + studentClass).disabled = false;
-
-          selectClass(studentClass);
-        } catch (error) {
-          console.error('Verify Error:', error);
-          alert('Error verifying student. Check console.');
-        }
-      }
-
-      function startExam(level, subject) {
-        currentSubject = subject;
-        const questions = [...questionBank[level][subject]].sort(
-          () => Math.random() - 0.5,
-        );
-
-        currentQuestions = questions;
-
-        hideAll();
-        quizScreen.classList.remove('hidden');
-        startCamera();
-        startSnapshots();
-        quizForm.innerHTML = '';
-
-        questions.forEach((q, i) => {
-          const shuffled = [...q.options].sort(() => Math.random() - 0.5);
-
-          quizForm.innerHTML += `
-      <div class="question">
-      <p>${q.q}</p>
-
-      ${shuffled
-        .map(
-          (o) =>
-            `<label>
-      <input type="radio" name="q${i}" value="${o}"> ${o}
-      </label><br>`,
-        )
-        .join('')}
-
-      </div>`;
-        });
-
-        const seconds = calculateExamTime(subject, questions.length);
-
-        alert(`You have ${Math.ceil(seconds / 60)} minutes.`);
-
-        startTimer(seconds);
-      }
-
-      function startTimer(seconds) {
-        timerInterval = setInterval(() => {
-          const m = Math.floor(seconds / 60);
-          const s = seconds % 60;
-
-          timer.innerText = `⏳ Time Remaining: ${m}:${s < 10 ? '0' : ''}${s}`;
-
-          seconds--;
-
-          if (seconds < 0) {
-            clearInterval(timerInterval);
-            gradeTest();
-          }
-        }, 1000);
-      }
-      // START CAMERA
-      async function startCamera() {
-        try {
-          cameraStream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: false,
-          });
-
-          const video = document.getElementById('cameraFeed');
-          video.srcObject = cameraStream;
-
-          document.getElementById('cameraBox').style.display = 'block';
-        } catch (err) {
-          alert('Camera access is required to take this exam.');
-          goHome();
-        }
-      }
-
-      // STOP CAMERA
-      function stopCamera() {
-        if (cameraStream) {
-          cameraStream.getTracks().forEach((track) => track.stop());
-          cameraStream = null;
-        }
-
-        document.getElementById('cameraBox').style.display = 'none';
-      }
-
-      function gradeTest() {
-        stopSnapshots();
-        stopCamera();
-        clearInterval(timerInterval);
-
-        let score = 0;
-
-        currentQuestions.forEach((q, i) => {
-          const picked = document.querySelector(`input[name="q${i}"]:checked`);
-          const questionBox = document.querySelectorAll('.question')[i];
-
-          // disable all radios
-          document
-            .querySelectorAll(`input[name="q${i}"]`)
-            .forEach((r) => (r.disabled = true));
-
-          if (picked && picked.value === q.answer) {
-            score++;
-
-            questionBox.style.border = '3px solid #38b000'; // green
-            questionBox.style.background = '#e9fbe5';
-
-            questionBox.innerHTML += `<p style="color:#2b9348;font-weight:bold;">
-           ✅ Correct
-           </p>`;
-          } else {
-            questionBox.style.border = '3px solid #d90429'; // red
-            questionBox.style.background = '#ffe5e5';
-
-            questionBox.innerHTML += `
-           <p style="color:#d90429;font-weight:bold;">
-           ❌ Wrong
-           </p>
-
-           <p style="color:#2b9348;font-weight:bold;">
-           Correct Answer: ${q.answer}
-           </p>`;
-          }
-        });
-
-        result.classList.remove('hidden');
-
-        result.innerText = `${currentStudent.name}, you scored ${Math.round(
-          (score / currentQuestions.length) * 100,
-        )}%`;
-        generateSlip(score);
-
-        goBackBox.classList.remove('hidden');
-      }
-      document.addEventListener('visibilitychange', () => {
-        if (
-          document.hidden &&
-          quizScreen.classList.contains('hidden') === false
-        ) {
-          alert('Tab switch detected!');
-          gradeTest();
-        }
-      });
-      // ADD THIS LINE: saves the subject for the result slip
-
-      function selectClass(level) {
-        if (!currentStudent || level !== currentStudent.class) {
-          alert('You are not allowed to access this class.');
-          return;
-        }
-
-        if (!questionsLoaded) {
-          document.getElementById('subjects').innerHTML =
-            'Preparing your exam... Please wait.';
-          return;
-        }
-
-        const subjectsDiv = document.getElementById('subjects');
-        subjectsDiv.innerHTML = '';
-
-        const subs = Object.keys(questionBank[level] || {});
-
-        if (subs.length === 0) {
-          subjectsDiv.innerHTML = '<b>No subjects uploaded yet.</b>';
-          return;
-        }
-
-        subs.forEach((sub) => {
-          subjectsDiv.innerHTML += `
-            <button class="pay-btn" onclick="startExam('${level}','${sub}')">
-              ${sub.toUpperCase()}
-            </button>
-          `;
-        });
-      }
-
-      // LOAD STUDENTS BY CLASS
-      window.loadStudentsByClass = async function (selectedClass) {
-        const list = document.getElementById('studentList');
-        list.innerHTML = 'Loading students...';
-
-        try {
-          const snap = await getDocs(collection(db, 'students'));
-          list.innerHTML = '';
-
-          let found = false;
-
-          snap.forEach((docSnap) => {
-            const student = docSnap.data();
-            const studentId = docSnap.id;
-
-            if (student.class === selectedClass) {
-              found = true;
-
-              list.innerHTML += `
-                <div style="
-                  border:1px solid #ddd;
-                  padding:15px;
-                  margin:15px 0;
-                  border-radius:12px;
-                  background:white;
-                ">
-                  <p><b>ID:</b> ${studentId}</p>
-                  <p><b>Name:</b> ${student.name}</p>
-                  <p><b>Class:</b> ${student.class.toUpperCase()}</p>
-
-                  <button
-                    class="pay-btn"
-                    onclick="deleteStudent('${studentId}','${selectedClass}')"
-                    style="background:#d90429;">
-                    🗑 Delete Student
-                  </button>
-                </div>
-              `;
-            }
-          });
-
-          if (!found) {
-            list.innerHTML = `<b>No students found for ${selectedClass.toUpperCase()}.</b>`;
-          }
-        } catch (error) {
-          console.error(error);
-          list.innerHTML = '<b>Error loading students.</b>';
-        }
-      };
-
-      // DELETE STUDENT
-      window.deleteStudent = async function (studentId, studentClass) {
-        const confirmDelete = confirm(
-          `Are you sure you want to delete student ${studentId}?`,
-        );
-
-        if (!confirmDelete) return;
-
-        try {
-          await deleteDoc(doc(db, 'students', studentId));
-
-          alert('Student deleted successfully.');
-
-          // Refresh list
-          loadStudentsByClass(studentClass);
-        } catch (error) {
-          console.error(error);
-          alert('Error deleting student.');
-        }
-      };
-
-      // DOWNLOAD STUDENT TEMPLATE
-      window.downloadStudentTemplate = function () {
-        const wb = XLSX.utils.book_new();
-
-        const data = [
-          ['Student ID', 'Student Name', 'Class (jhs1/jhs2/jhs3)'],
-          ['JHS1001', 'Kwame Mensah', 'jhs1'],
-          ['JHS2001', 'Ama Owusu', 'jhs2'],
-        ];
-
-        const ws = XLSX.utils.aoa_to_sheet(data);
-        XLSX.utils.book_append_sheet(wb, ws, 'Students');
-
-        XLSX.writeFile(wb, 'CBT_Student_Template.xlsx');
-      };
-
-      // UPLOAD STUDENT EXCEL
-      window.uploadStudentExcel = async function () {
-        const fileInput = document.getElementById('studentExcelFile');
-        const status = document.getElementById('studentUploadStatus');
-
-        if (!fileInput.files.length) {
-          alert('Please select a student Excel file.');
-          return;
-        }
-
-        const file = fileInput.files[0];
-        const reader = new FileReader();
-
-        reader.onload = async function (e) {
-          const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, { type: 'array' });
-
-          const sheetName = workbook.SheetNames[0];
-          const sheet = workbook.Sheets[sheetName];
-
-          const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-          if (jsonData.length < 2) {
-            alert('Excel file is empty.');
-            return;
-          }
-
-          let successCount = 0;
-          let skippedCount = 0;
-
-          for (let i = 1; i < jsonData.length; i++) {
-            const row = jsonData[i];
-
-            const studentId = row[0]?.toString().trim();
-            const studentName = row[1]?.toString().trim();
-            const studentClass = row[2]?.toString().toLowerCase().trim();
-
-            if (!studentId || !studentName || !studentClass) {
-              skippedCount++;
-              continue;
-            }
-
-            if (!['jhs1', 'jhs2', 'jhs3'].includes(studentClass)) {
-              skippedCount++;
-              continue;
-            }
-
-            try {
-              await setDoc(doc(db, 'students', studentId), {
-                name: studentName,
-                class: studentClass,
-              });
-
-              successCount++;
-            } catch (err) {
-              console.error('Student upload error:', err);
-              skippedCount++;
-            }
-          }
-
-          status.innerHTML = `
-            ✅ Uploaded: ${successCount} students <br>
-            ⚠ Skipped: ${skippedCount} rows
-          `;
-        };
-
-        reader.readAsArrayBuffer(file);
-      };
-      // DOWNLOAD TEMPLATE
-      window.downloadTemplate = function () {
-        const wb = XLSX.utils.book_new();
-
-        const data = [
-          [
-            'Class (jhs1/jhs2/jhs3)',
-            'Subject',
-            'Question',
-            'Option1',
-            'Option2',
-            'Option3',
-            'Option4',
-            'Correct Answer',
-          ],
-          ['jhs1', 'english', 'What is 2 + 2?', '3', '4', '5', '6', '4'],
-        ];
-
-        const ws = XLSX.utils.aoa_to_sheet(data);
-        XLSX.utils.book_append_sheet(wb, ws, 'Questions');
-
-        XLSX.writeFile(wb, 'CBT_Questions_Template.xlsx');
-      };
-
-      // UPLOAD EXCEL QUESTIONS
-      window.uploadExcelQuestions = async function () {
-        const fileInput = document.getElementById('excelFile');
-        const status = document.getElementById('uploadStatus');
-
-        if (!fileInput.files.length) {
-          alert('Please select an Excel file.');
-          return;
-        }
-
-        const file = fileInput.files[0];
-        const reader = new FileReader();
-
-        reader.onload = async function (e) {
-          const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, { type: 'array' });
-
-          const sheetName = workbook.SheetNames[0];
-          const sheet = workbook.Sheets[sheetName];
-
-          const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-
-          if (jsonData.length < 2) {
-            alert('Excel file is empty.');
-            return;
-          }
-
-          let successCount = 0;
-
-          for (let i = 1; i < jsonData.length; i++) {
-            const row = jsonData[i];
-
-            if (!row[0] || !row[2]) continue;
-
-            try {
-              await addDoc(collection(db, 'questions'), {
-                level: row[0].toLowerCase(),
-                subject: row[1].toLowerCase(),
-                q: row[2],
-                options: [row[3], row[4], row[5], row[6]].filter(Boolean),
-                answer: row[7],
-              });
-
-              successCount++;
-            } catch (err) {
-              console.error('Row upload error:', err);
-            }
-          }
-
-          status.innerHTML = `✅ Successfully uploaded ${successCount} questions.`;
-
-          loadQuestions();
-        };
-
-        reader.readAsArrayBuffer(file);
-      };
-      // expose
-      window.verifyStudent = verifyStudent;
-      window.openAdmin = openAdmin;
-      window.loginAdmin = loginAdmin;
-      window.logoutAdmin = logoutAdmin;
-      window.addStudent = addStudent;
-      window.addQuestion = addQuestion;
-      window.selectClass = selectClass;
-      window.startExam = startExam;
-      window.gradeTest = gradeTest;
-      window.goHome = goHome;
-      window.loadSnapshots = loadSnapshots;
-      window.deleteSnapshot = deleteSnapshot;
-      window.deleteAllSnapshots = deleteAllSnapshots;
-      window.loadAdminQuestionsByClass = loadAdminQuestionsByClass;
-      window.deleteQuestion = deleteQuestion;
-      window.printSlip = printSlip;
-      async function generateSlip(score) {
-        const percent = Math.round((score / currentQuestions.length) * 100);
-
-        const resultId = 'RES-' + Date.now();
-
-        const resultData = {
-          resultId: resultId,
-          studentName: currentStudent.name,
-          class: currentStudent.class,
-          subject: currentSubject,
-          score: percent,
-          total: currentQuestions.length,
-          date: new Date(),
-          status: percent >= 50 ? 'PASS' : 'FAIL',
-        };
-
-        // ✅ Save to Firestore
-        await setDoc(doc(db, 'results', resultId), resultData);
-
-        const verifyURL =
-          window.location.origin + '/verify.html?resultId=' + resultId;
-
-        const slip = `
-      <div style="
-      background:white;
-      padding:30px;
-      border-radius:16px;
-      max-width:500px;
-      margin:30px auto;
-      text-align:center;
-      font-family:Segoe UI, sans-serif;
-      ">
-
-      <img src="watermark.png"
-           style="width:90px;height:90px;margin-bottom:15px;">
-
-      <h2>SKY ELITE ASSESSMENT PORTAL</h2>
-      <hr><br>
-
-      <p><b>Result ID:</b> ${resultId}</p>
-      <p><b>Student:</b> ${resultData.studentName}</p>
-      <p><b>Class:</b> ${resultData.class.toUpperCase().replace('JHS', 'JHS ')}</p>
-      <p><b>Subject:</b> ${resultData.subject.toUpperCase()}</p>
-      <p><b>Score:</b> ${percent}%</p>
-      <p><b>Date:</b> ${new Date().toLocaleDateString()}</p>
-
-      <h1 style="color:${percent >= 50 ? '#38b000' : '#d90429'}">
-      ${resultData.status}
-      </h1>
-
-      <br>
-      <img id="qrCodeImage" />
-      <p style="font-size:12px;color:gray;">
-      Scan to verify result online
-      </p>
-
-      </div>
-      `;
-
-        resultSlip.innerHTML = slip;
-        resultSlip.classList.remove('hidden');
-        printBox.classList.remove('hidden');
-
-        QRCode.toDataURL(verifyURL, { width: 130 }, function (err, url) {
-          if (err) {
-            console.error(err);
-            return;
-          }
-
-          document.getElementById('qrCodeImage').src = url;
-        });
-      }
-      function printSlip() {
-        window.print();
-      }
-    </script>
-    <!-- Code injected by live-server -->
-    <script>
-      // <![CDATA[  <-- For SVG support
-      if ('WebSocket' in window) {
-        (function () {
-          function refreshCSS() {
-            var sheets = [].slice.call(document.getElementsByTagName('link'));
-            var head = document.getElementsByTagName('head')[0];
-            for (var i = 0; i < sheets.length; ++i) {
-              var elem = sheets[i];
-              var parent = elem.parentElement || head;
-              parent.removeChild(elem);
-              var rel = elem.rel;
-              if (
-                (elem.href && typeof rel != 'string') ||
-                rel.length == 0 ||
-                rel.toLowerCase() == 'stylesheet'
-              ) {
-                var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
-                elem.href =
-                  url +
-                  (url.indexOf('?') >= 0 ? '&' : '?') +
-                  '_cacheOverride=' +
-                  new Date().valueOf();
-              }
-              parent.appendChild(elem);
-            }
-          }
-          var protocol =
-            window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-          var address =
-            protocol + window.location.host + window.location.pathname + '/ws';
-          var socket = new WebSocket(address);
-          socket.onmessage = function (msg) {
-            if (msg.data == 'reload') window.location.reload();
-            else if (msg.data == 'refreshcss') refreshCSS();
-          };
-          if (
-            sessionStorage &&
-            !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')
-          ) {
-            console.log('Live reload enabled.');
-            sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
-          }
-        })();
-      } else {
-        console.error(
-          'Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.',
-        );
-      }
-      // ]]>
-    </script>
-    <!-- Code injected by live-server -->
-    <script>
-      // <![CDATA[  <-- For SVG support
-      if ('WebSocket' in window) {
-        (function () {
-          function refreshCSS() {
-            var sheets = [].slice.call(document.getElementsByTagName('link'));
-            var head = document.getElementsByTagName('head')[0];
-            for (var i = 0; i < sheets.length; ++i) {
-              var elem = sheets[i];
-              var parent = elem.parentElement || head;
-              parent.removeChild(elem);
-              var rel = elem.rel;
-              if (
-                (elem.href && typeof rel != 'string') ||
-                rel.length == 0 ||
-                rel.toLowerCase() == 'stylesheet'
-              ) {
-                var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
-                elem.href =
-                  url +
-                  (url.indexOf('?') >= 0 ? '&' : '?') +
-                  '_cacheOverride=' +
-                  new Date().valueOf();
-              }
-              parent.appendChild(elem);
-            }
-          }
-          var protocol =
-            window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-          var address =
-            protocol + window.location.host + window.location.pathname + '/ws';
-          var socket = new WebSocket(address);
-          socket.onmessage = function (msg) {
-            if (msg.data == 'reload') window.location.reload();
-            else if (msg.data == 'refreshcss') refreshCSS();
-          };
-          if (
-            sessionStorage &&
-            !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')
-          ) {
-            console.log('Live reload enabled.');
-            sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
-          }
-        })();
-      } else {
-        console.error(
-          'Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.',
-        );
-      }
-      // ]]>
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-  </body>
+    <div class="card">
+      <h3>Tab Switch Detection</h3>
+      <p>Flags students when they leave the exam screen.</p>
+    </div>
+
+    <div class="card">
+      <h3>Instant Results</h3>
+      <p>Generate results immediately after exams are completed.</p>
+    </div>
+
+    <div class="card">
+      <h3>QR Code Verification</h3>
+      <p>Secure result slips that cannot be forged.</p>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <h2>System Impact</h2>
+  <div class="stats">
+    <div class="stat-box"><h3>100%</h3><p>Exam Monitoring</p></div>
+    <div class="stat-box"><h3>0%</h3><p>Forgery Risk</p></div>
+    <div class="stat-box"><h3>Instant</h3><p>Results</p></div>
+  </div>
+</section>
+<section class="section">
+  <h2>Why Schools Choose Us</h2>
+  <div class="features">
+    <div class="card">
+      <p>✔ Prevent exam malpractice</p>
+      <p>✔ Easy to use for teachers</p>
+      <p>✔ Fully secure system</p>
+      <p>✔ Fast and reliable</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Ready to Transform Your Exams?</h2>
+  <p>Book a demo today and see how it works.</p>
+ <a href="makepayment.html" target="_blank" rel="noopener noreferrer"><button>Sign Up</button></a> 
+</section>
+
+<footer>
+  <p>© 2026 Sky Elite Assessment Portal. All rights reserved.</p>
+</footer>
+
+</body>
 </html>
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sky Creative | Secure CBT Platform</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+
