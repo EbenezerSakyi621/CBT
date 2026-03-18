@@ -202,6 +202,15 @@
       text-align:center; padding:70px 20px;
       background:#1E3A8A; color:white;
     }
+    .dark {
+  background: #0f172a;
+  color: #f1f5f9;
+}
+
+.dark .card {
+  background: #1e293b;
+  color: white;
+}
 
     footer {
       text-align:center; padding:20px;
@@ -238,6 +247,7 @@
     <a href="nextp.html">Enter Exam</a>
     <a href="makepayment.html">Sign Up</a>
   </nav>
+  <button onclick="toggleTheme()" class="btn">🌙 Toggle Mode</button>
 </header>
 
 <section class="hero">
@@ -299,7 +309,11 @@
 <footer>
   <p>© 2026 Sky Elite Assessment Portal. All rights reserved.</p>
 </footer>
-
+ <script>
+  function toggleTheme() {
+  document.body.classList.toggle("dark");
+}
+ </script>
 </body>
 </html>
 
@@ -307,14 +321,5 @@
 
 
 
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sky Creative | Secure CBT Platform</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 
